@@ -1,5 +1,7 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
-  font-family: var(--font-noto-kufi-arabic), sans-serif;
+  font-family: var(--font-noto-kufi-arabic), Arial, sans-serif;
 }

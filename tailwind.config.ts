@@ -7,7 +7,15 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+      },
+      fontFamily: {
+        'arabic': ['var(--font-noto-kufi-arabic)', 'Arial', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }

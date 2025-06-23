@@ -4,7 +4,7 @@ import "./globals.css";
 
 const notoKufiArabic = Noto_Kufi_Arabic({
   subsets: ["arabic"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
   variable: "--font-noto-kufi-arabic",
 });
@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${notoKufiArabic.variable} antialiased`}>
+      <body className={`${notoKufiArabic.variable} font-arabic antialiased`}>
         {children}
       </body>
     </html>
