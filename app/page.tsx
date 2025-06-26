@@ -240,8 +240,14 @@ export default function Home() {
         className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg shadow-sm"
       >
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+          <nav className="hidden md:flex gap-8">
+            <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">المميزات</a>
+            <a href="#methods" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">طرق التعلم</a>
+            <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">من نحن</a>
+            <a href="#payment" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">الدفع</a>
+          </nav>
           <div className="flex items-center">
-            <div className="w-42 h-20 relative">
+            <div className="w-48 h-16 relative">
               <Image 
                 src="/logo.png" 
                 alt="Wall Street English Logo"
@@ -251,12 +257,6 @@ export default function Home() {
               />
             </div>
           </div>
-          <nav className="hidden md:flex gap-8">
-            <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">المميزات</a>
-            <a href="#methods" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">طرق التعلم</a>
-            <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">من نحن</a>
-            <a href="#payment" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">الدفع</a>
-          </nav>
         </div>
       </motion.header>
 
@@ -270,7 +270,7 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-tight" style={{ color: '#0e25ac' }}>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: '#0e25ac', lineHeight: '1.4' }}>
                 تعلم
                 <span style={{ color: '#FF0201' }}> الانجليزي </span>
                 من أي مكان
@@ -297,13 +297,13 @@ export default function Home() {
                 src="/hdrtv.webp" 
                 alt="تعلم الإنجليزية أونلاين مع Wall Street English"
                 fill
-                className="object-cover rounded-2xl"
+                className="object-contain"
           priority
         />
               <motion.div 
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-4 -right-4 w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+                className="absolute top-2 right-24 w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
                 style={{ backgroundColor: '#FF0201' }}
               >
                 <Globe className="w-6 h-6 text-white" />
