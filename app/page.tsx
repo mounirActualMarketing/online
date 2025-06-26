@@ -370,7 +370,7 @@ export default function Home() {
             >
               <h2 className="text-5xl md:text-6xl font-bold mb-6" style={{ color: '#0e25ac', lineHeight: '1.4' }}>
                 تعلم
-                <span style={{ color: '#FF0201' }}> الانجليزي </span>
+                <span style={{ color: '#FF0201' }}> الإنجليزي </span>
                 من أي مكان
               </h2>
               <p className="text-xl mb-8 leading-relaxed" style={{ color: '#0e25ac' }}>
@@ -500,8 +500,7 @@ export default function Home() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
-                      const element = document.getElementById('contact-form-section');
-                      element?.scrollIntoView({ behavior: 'smooth' });
+                      window.open('https://api.whatsapp.com/send/?phone=%2B966501275150&text&type=phone_number&app_absent=0', '_blank');
                     }}
                     className="text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
                     style={{ backgroundColor: '#FF0201' }}
@@ -544,8 +543,7 @@ export default function Home() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
-                      const element = document.getElementById('contact-form-section');
-                      element?.scrollIntoView({ behavior: 'smooth' });
+                      window.open('https://api.whatsapp.com/send/?phone=%2B966553177388&text&type=phone_number&app_absent=0', '_blank');
                     }}
                     className="text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
                     style={{ backgroundColor: '#0e25ac' }}
@@ -664,7 +662,7 @@ export default function Home() {
                      width="100%" 
                      height="100%" 
                      src="https://www.youtube.com/embed/S4arTLoBD5s" 
-                     title="GOC- الفصول الدراسية العالمية الجديدة من وول ستريت إنجلش #تعلم_الانجليزية" 
+                     title="GOC- الفصول الدراسية العالمية الجديدة من وول ستريت إنجلش #تعلم_الإنجليزية" 
                      frameBorder="0" 
                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                      referrerPolicy="strict-origin-when-cross-origin" 
@@ -984,7 +982,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <h3 className="text-4xl font-bold mb-4" style={{ color: '#0e25ac' }}>ليش الكل بختارنا</h3>
+            <h3 className="text-4xl font-bold mb-4" style={{ color: '#0e25ac' }}>ليش الكل يختارنا</h3>
             <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-red-500 mx-auto rounded-full"></div>
           </motion.div>
 
@@ -1081,82 +1079,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Form Section - After Payment */}
-      <section id="contact-form-section" className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
-            <h3 className="text-4xl font-bold mb-4" style={{ color: '#0e25ac' }}>املأ بياناتك لتحديد موعد مع المستشار التدريبي</h3>
-            <div className="w-24 h-1 mx-auto rounded-full" style={{ backgroundColor: '#FF0201' }}></div>
-            <p className="text-lg mt-6 max-w-2xl mx-auto" style={{ color: '#0e25ac' }}>
-              احجز استشارة مجانية مع خبرائنا لتحديد أفضل برنامج تعليمي يناسب احتياجاتك
-            </p>
-          </motion.div>
 
-          <div className="max-w-2xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="bg-white rounded-3xl shadow-2xl p-8 relative overflow-hidden"
-            >
-              {/* Decorative elements */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full -translate-y-16 translate-x-16 opacity-50"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full translate-y-8 -translate-x-8 opacity-30" style={{ backgroundColor: '#FF0201' }}></div>
-              
-              {/* Form Header */}
-              <div className="relative z-10 mb-6 text-center">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FF0201' }}>
-                    <Calendar className="w-6 h-6 text-white" />
-                  </div>
-                  <h4 className="text-2xl font-bold" style={{ color: '#0e25ac' }}>احجز استشارتك المجانية</h4>
-                </div>
-                <p className="text-sm" style={{ color: '#0e25ac' }}>
-                  سيتواصل معك مستشارنا خلال 24 ساعة لتحديد الموعد المناسب
-                </p>
-              </div>
-
-              {/* HubSpot Form */}
-              <div className="relative z-10">
-                <ContactFormWidget formId="second" />
-              </div>
-
-              {/* Trust indicators below form */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="relative z-10 pt-6 mt-6 border-t border-gray-100"
-              >
-                <div className="flex items-center justify-center gap-8">
-                  <div className="text-center">
-                    <div className="flex justify-center mb-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="w-4 h-4 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-xs" style={{ color: '#0e25ac' }}>4.9/5 تقييم</p>
-                  </div>
-                  <div className="w-px h-8 bg-gray-300"></div>
-                  <div className="text-center">
-                    <p className="font-bold text-lg" style={{ color: '#0e25ac' }}>+50</p>
-                    <p className="text-xs" style={{ color: '#0e25ac' }}>سنة خبرة</p>
-                  </div>
-                  <div className="w-px h-8 bg-gray-300"></div>
-                  <div className="text-center">
-                    <p className="font-bold text-lg" style={{ color: '#0e25ac' }}>+3M</p>
-                    <p className="text-xs" style={{ color: '#0e25ac' }}>طالب</p>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
