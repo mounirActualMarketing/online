@@ -329,7 +329,7 @@ const ContactFormWidget = ({ formId = "default" }: { formId?: string }) => {
 
 export default function Home() {
   return (
-    <main className="bg-gradient-to-br from-blue-50 to-white" dir="rtl">
+    <main className="bg-gradient-to-br from-blue-50 to-white overflow-x-hidden" dir="rtl">
       <SocialProofNotifications />
       {/* Header */}
       <motion.header 
