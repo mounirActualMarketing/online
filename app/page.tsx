@@ -396,10 +396,7 @@ export default function Home() {
                   </div>
                   
                   <h4 className="text-2xl font-bold mb-3" style={{ color: '#0e25ac' }}>فايز</h4>
-                  <p className="text-lg mb-4" style={{ color: '#FF0201' }}>خبير تعليم اللغة الإنجليزية</p>
-                  <p className="text-sm mb-6 leading-relaxed" style={{ color: '#0e25ac' }}>
-                    خبرة أكثر من 10 سنوات في تعليم اللغة الإنجليزية للطلاب العرب. متخصص في المحادثة والقواعد.
-                  </p>
+
                   
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -443,10 +440,7 @@ export default function Home() {
                   </div>
                   
                   <h4 className="text-2xl font-bold mb-3" style={{ color: '#0e25ac' }}>هيفاء</h4>
-                  <p className="text-lg mb-4" style={{ color: '#FF0201' }}>خبيرة تعليم اللغة الإنجليزية</p>
-                  <p className="text-sm mb-6 leading-relaxed" style={{ color: '#0e25ac' }}>
-                    متخصصة في تطوير مهارات الكتابة والقراءة. خبرة واسعة في إعداد الطلاب لاختبارات اللغة الدولية.
-                  </p>
+
                   
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -465,37 +459,7 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* Bottom stats */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-4xl mx-auto"
-          >
-            <div className="text-center bg-white rounded-2xl p-6 shadow-lg">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FF0201' }}>
-                <Clock className="w-8 h-8 text-white" />
-              </div>
-              <h5 className="text-2xl font-bold mb-2" style={{ color: '#0e25ac' }}>24/7</h5>
-              <p className="text-sm" style={{ color: '#0e25ac' }}>دعم متواصل</p>
-            </div>
 
-            <div className="text-center bg-white rounded-2xl p-6 shadow-lg">
-              <div className="w-16 h-16 mx-auto mb-4 bg-blue-500 rounded-full flex items-center justify-center">
-                <Heart className="w-8 h-8 text-white" />
-              </div>
-              <h5 className="text-2xl font-bold mb-2" style={{ color: '#0e25ac' }}>100%</h5>
-              <p className="text-sm" style={{ color: '#0e25ac' }}>رضا العملاء</p>
-            </div>
-
-            <div className="text-center bg-white rounded-2xl p-6 shadow-lg">
-              <div className="w-16 h-16 mx-auto mb-4 bg-green-500 rounded-full flex items-center justify-center">
-                <Award className="w-8 h-8 text-white" />
-              </div>
-              <h5 className="text-2xl font-bold mb-2" style={{ color: '#0e25ac' }}>+15</h5>
-              <p className="text-sm" style={{ color: '#0e25ac' }}>سنة خبرة</p>
-            </div>
-          </motion.div>
         </div>
       </section>
 
@@ -557,16 +521,16 @@ export default function Home() {
             <WhyOnlineCard 
               icon={<Clock className="w-6 h-6" />}
               title="لأن وقتك مع العائلة ثمين"
-              text="حدود الجدول اللي يناسبك"
+              text="‏حدّد الجدول اللي يناسبك"
             />
             <WhyOnlineCard 
               icon={<Heart className="w-6 h-6" />}
-              title="لأنك تتي تطور نفسك والوقت ما يوقف"
+              title="لأنك تبي تطور نفسك والوقت ما يوقف"
               text="ادرس في الوقت اللي تحبه"
             />
             <WhyOnlineCard 
               icon={<CheckCircle className="w-6 h-6" />}
-              title="لأنك ما تيجي تسوق بعد الشغل"
+              title="لأنك ما تبغى تسوق بعد الشغل"
               text="الصف يجي لعندك"
             />
           </div>
@@ -655,7 +619,7 @@ export default function Home() {
                  className="text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 mx-4 cursor-pointer"
                  style={{ backgroundColor: '#FF0201' }}
                >
-                 ابدأ الآن مجاناً
+                 ابدأ الآن 
                </motion.button>
                <motion.button
                  whileHover={{ scale: 1.05 }}
