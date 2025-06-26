@@ -14,6 +14,8 @@ import {
   Calendar,
   CreditCard,
   Shield,
+  User,
+  MessageCircle,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -171,6 +173,101 @@ const ReviewsWidget = () => {
   return <div id="carousel-widget" style={{ maxWidth: '1200px', margin: '0 auto' }}></div>;
 };
 
+// Social Proof Notifications Component
+const SocialProofNotifications = () => {
+  const [notifications, setNotifications] = useState<Array<{
+    id: number;
+    type: 'subscription' | 'review';
+    name: string;
+    message: string;
+    time: string;
+    rating?: number;
+  }>>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const sampleNotifications = [
+    { id: 1, type: 'subscription' as const, name: 'أحمد محمد', message: 'اشترك في الباقة المتقدمة', time: 'الآن' },
+    { id: 2, type: 'review' as const, name: 'فاطمة العلي', message: 'تجربة رائعة! تحسن مستواي كثيراً', time: 'منذ دقيقتين', rating: 5 },
+    { id: 3, type: 'subscription' as const, name: 'خالد السعد', message: 'بدأ رحلته التعليمية', time: 'منذ 3 دقائق' },
+    { id: 4, type: 'review' as const, name: 'نورا حسن', message: 'المعلمون محترفون جداً', time: 'منذ 5 دقائق', rating: 5 },
+    { id: 5, type: 'subscription' as const, name: 'سارة أحمد', message: 'انضمت للفصول المباشرة', time: 'منذ 7 دقائق' },
+    { id: 6, type: 'review' as const, name: 'محمد علي', message: 'أفضل منصة لتعلم الإنجليزية', time: 'منذ 10 دقائق', rating: 5 },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % sampleNotifications.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const currentNotification = sampleNotifications[currentIndex];
+    setNotifications([currentNotification]);
+  }, [currentIndex]);
+
+  return (
+    <div className="fixed bottom-4 left-4 z-40">
+      {notifications.map((notification) => (
+        <motion.div
+          key={notification.id}
+          initial={{ opacity: 0, x: -100, scale: 0.8 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          exit={{ opacity: 0, x: -100, scale: 0.8 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="bg-white rounded-lg shadow-lg border border-gray-100 p-3 max-w-xs hover:shadow-xl transition-all duration-300 md:max-w-sm md:p-4"
+          style={{ 
+            backdropFilter: 'blur(10px)',
+            background: 'rgba(255, 255, 255, 0.95)'
+          }}
+        >
+          <div className="flex items-start gap-2 md:gap-3">
+            <div className={`
+              w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center flex-shrink-0
+              ${notification.type === 'subscription' ? 'bg-green-100' : 'bg-blue-100'}
+            `}>
+              {notification.type === 'subscription' ? (
+                <User className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
+              ) : (
+                <MessageCircle className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1 mb-1">
+                <p className="text-xs md:text-sm font-semibold text-gray-800 truncate">
+                  {notification.name}
+                </p>
+                {notification.rating && (
+                  <div className="flex">
+                    {[...Array(notification.rating)].map((_, i) => (
+                      <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                )}
+              </div>
+              <p className="text-xs md:text-sm text-gray-600 line-clamp-2">
+                {notification.message}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {notification.time}
+              </p>
+            </div>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className={`
+                w-2 h-2 rounded-full
+                ${notification.type === 'subscription' ? 'bg-green-500' : 'bg-blue-500'}
+              `}
+            />
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
 // HubSpot Contact Form Component
 const ContactFormWidget = ({ formId = "default" }: { formId?: string }) => {
   const [mounted, setMounted] = useState(false);
@@ -233,6 +330,7 @@ const ContactFormWidget = ({ formId = "default" }: { formId?: string }) => {
 export default function Home() {
   return (
     <main className="bg-gradient-to-br from-blue-50 to-white" dir="rtl">
+      <SocialProofNotifications />
       {/* Header */}
       <motion.header 
         initial={{ opacity: 0, y: -20 }}
