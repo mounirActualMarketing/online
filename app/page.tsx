@@ -328,6 +328,13 @@ const ContactFormWidget = ({ formId = "default" }: { formId?: string }) => {
 };
 
 export default function Home() {
+  // Track ViewContent event when page loads
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'ViewContent');
+    }
+  }, []);
+
   return (
     <main className="bg-gradient-to-br from-blue-50 to-white overflow-x-hidden" dir="rtl">
       <SocialProofNotifications />
