@@ -185,14 +185,14 @@ const SocialProofNotifications = () => {
   }>>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const sampleNotifications = [
+  const sampleNotifications = React.useMemo(() => [
     { id: 1, type: 'subscription' as const, name: 'أحمد محمد', message: 'اشترك في الباقة المتقدمة', time: 'الآن' },
     { id: 2, type: 'review' as const, name: 'فاطمة العلي', message: 'تجربة رائعة! تحسن مستواي كثيراً', time: 'منذ دقيقتين', rating: 5 },
     { id: 3, type: 'subscription' as const, name: 'خالد السعد', message: 'بدأ رحلته التعليمية', time: 'منذ 3 دقائق' },
     { id: 4, type: 'review' as const, name: 'نورا حسن', message: 'المعلمون محترفون جداً', time: 'منذ 5 دقائق', rating: 5 },
     { id: 5, type: 'subscription' as const, name: 'سارة أحمد', message: 'انضمت للفصول المباشرة', time: 'منذ 7 دقائق' },
     { id: 6, type: 'review' as const, name: 'محمد علي', message: 'أفضل منصة لتعلم الإنجليزية', time: 'منذ 10 دقائق', rating: 5 },
-  ];
+  ], []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -200,12 +200,12 @@ const SocialProofNotifications = () => {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [sampleNotifications.length]);
 
   useEffect(() => {
     const currentNotification = sampleNotifications[currentIndex];
     setNotifications([currentNotification]);
-  }, [currentIndex]);
+  }, [currentIndex, sampleNotifications]);
 
   return (
     <div className="fixed bottom-4 left-4 z-40">
@@ -500,6 +500,14 @@ export default function Home() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
+                      // Track Facebook event
+                      if (typeof window !== 'undefined' && (window as any).fbq) {
+                        (window as any).fbq('track', 'OnlineWhatsappbuttonClick');
+                      }
+                      // Track Snapchat event
+                      if (typeof window !== 'undefined' && (window as any).snaptr) {
+                        (window as any).snaptr('track', 'CUSTOM_EVENT_1');
+                      }
                       window.open('https://api.whatsapp.com/send/?phone=%2B966501275150&text&type=phone_number&app_absent=0', '_blank');
                     }}
                     className="text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
@@ -543,6 +551,14 @@ export default function Home() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
+                      // Track Facebook event
+                      if (typeof window !== 'undefined' && (window as any).fbq) {
+                        (window as any).fbq('track', 'OnlineWhatsappbuttonClick');
+                      }
+                      // Track Snapchat event
+                      if (typeof window !== 'undefined' && (window as any).snaptr) {
+                        (window as any).snaptr('track', 'CUSTOM_EVENT_1');
+                      }
                       window.open('https://api.whatsapp.com/send/?phone=%2B966553177388&text&type=phone_number&app_absent=0', '_blank');
                     }}
                     className="text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
