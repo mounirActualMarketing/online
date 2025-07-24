@@ -114,7 +114,7 @@ const CompactBenefits = () => {
   return (
     <div className="grid grid-cols-1 gap-3 mb-6">
       {benefits.map((benefit, index) => (
-        <motion.div
+    <motion.div 
           key={index}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -124,15 +124,15 @@ const CompactBenefits = () => {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br flex items-center justify-center text-white shadow-sm flex-shrink-0" style={{ background: 'linear-gradient(135deg, #de1135, #b91c2c)' }}>
               {benefit.icon}
-            </div>
-            <div className="flex-1">
+        </div>
+        <div className="flex-1">
               <div className="text-sm font-semibold text-gray-800 mb-1">{benefit.title}</div>
               <div className="text-xs text-gray-600">{benefit.value}</div>
             </div>
           </div>
         </motion.div>
-      ))}
-    </div>
+        ))}
+      </div>
   );
 };
 
@@ -168,7 +168,7 @@ const SocialProofTicker = () => {
       transition={{ duration: 2, repeat: Infinity }}
       className="flex items-center justify-center gap-2 text-xs text-white mb-4"
     >
-      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
       <span>{count} متصل الآن</span>
       <span>•</span>
       <span>73 انضم اليوم</span>
@@ -196,31 +196,31 @@ export default function ThankYou() {
   }, []);
 
   return (
-    <main className="min-h-screen lg:h-screen bg-white lg:overflow-hidden flex items-center justify-center" dir="rtl">
+    <main className="h-screen bg-white overflow-hidden flex items-center justify-center" dir="rtl">
       <div className="w-full max-w-6xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-8 items-center lg:h-full">
-          
+        <div className="grid lg:grid-cols-2 gap-8 items-center h-full">
+      
           {/* Left Side - Success & Content */}
-          <motion.div
+            <motion.div 
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6"
           >
             {/* Logo & Success */}
             <div className="text-center lg:text-right">
-              <motion.div 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
+            <motion.div 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring" }}
                 className="w-16 h-16 mx-auto lg:mx-0 mb-4 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center shadow-lg"
-              >
+            >
                 <Timer className="w-8 h-8 text-red-600 animate-pulse" />
-              </motion.div>
-              
+            </motion.div>
+            
               <h1 className="text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-red-600 bg-clip-text text-transparent" style={{ color: '#003359' }}>
                 انتظر! لم يتم إكمال التسجيل بعد
-              </h1>
-              
+            </h1>
+            
               <p className="text-gray-600 mb-4">
                 لإتمام عملية التسجيل والحصول على عرضك الحصري
               </p>
@@ -241,7 +241,7 @@ export default function ThankYou() {
           </motion.div>
 
           {/* Right Side - Offer & CTA */}
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
@@ -271,16 +271,16 @@ export default function ThankYou() {
                 <div className="flex items-center justify-center gap-2 mb-3">
                   <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}>
                     <Flame className="w-6 h-6 text-yellow-300" />
-                  </motion.div>
+              </motion.div>
                   <h2 className="text-xl lg:text-2xl font-bold">عرض حصري محدود!</h2>
                   <motion.div animate={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}>
                     <Flame className="w-6 h-6 text-yellow-300" />
-                  </motion.div>
-                </div>
-                
+              </motion.div>
+            </div>
+            
                 <p className="text-sm opacity-90 mb-4">
-                  احصل على مجموعة أدوات تعلم الإنجليزية المتقدمة
-                </p>
+              احصل على مجموعة أدوات تعلم الإنجليزية المتقدمة
+            </p>
               </div>
 
               {/* Social Proof */}
@@ -296,7 +296,7 @@ export default function ThankYou() {
                     <div className="text-xs text-red-200 opacity-75">السعر الأصلي</div>
                   </div>
                   <ArrowRight className="w-6 h-6 text-yellow-300" />
-                  <div className="text-center">
+                <div className="text-center">
                     <div className="text-3xl lg:text-4xl font-bold text-yellow-300 drop-shadow-lg">37 ريال</div>
                     <div className="text-xs text-yellow-300">🔥 اليوم فقط</div>
                   </div>
@@ -306,7 +306,7 @@ export default function ThankYou() {
                   خصم 98% - وفر 1463 ريال!
                 </div>
               </div>
-
+              
               {/* Countdown */}
               <div className="text-center mb-6">
                 <div className="text-sm mb-2 opacity-90">العرض ينتهي خلال:</div>
@@ -318,17 +318,17 @@ export default function ThankYou() {
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Timer className="w-4 h-4 text-yellow-300" />
                   <span className="text-sm font-semibold">27 مقعد متبقي من أصل 100</span>
-                </div>
-                
+            </div>
+
                 <div className="bg-red-700 rounded-full h-3 overflow-hidden shadow-inner">
-                  <motion.div 
+              <motion.div
                     initial={{ width: "0%" }}
                     animate={{ width: "73%" }}
                     transition={{ duration: 2, ease: "easeOut" }}
                     className="bg-gradient-to-r from-yellow-400 to-orange-400 h-full rounded-full"
                   ></motion.div>
-                </div>
-              </div>
+        </div>
+          </div>
 
               {/* CTA Buttons */}
               <div className="flex flex-col gap-6">
@@ -355,18 +355,18 @@ export default function ThankYou() {
                     دفع سريع وآمن
                   </motion.button>
                 </Link>
-              </div>
-
+            </div>
+            
               {/* Trust Badges */}
               <div className="flex justify-center items-center gap-4 mt-6 text-xs opacity-90">
                 <div className="flex items-center gap-1">
                   <Shield className="w-4 h-4" />
                   <span>ضمان استرداد</span>
-                </div>
+            </div>
                 <div className="flex items-center gap-1">
                   <Lock className="w-4 h-4" />
                   <span>دفع آمن</span>
-                </div>
+          </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-yellow-300 fill-current" />
                   <span>4.9/5</span>
@@ -374,8 +374,8 @@ export default function ThankYou() {
               </div>
             </div>
           </motion.div>
+          </div>
         </div>
-      </div>
     </main>
   );
 }

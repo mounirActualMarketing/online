@@ -386,7 +386,11 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={() => {
+                  const element = document.getElementById('contact-form-section');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
                 style={{ backgroundColor: '#FF0201' }}
               >
                 سجل الآن
@@ -854,7 +858,7 @@ export default function Home() {
        </section>
 
        {/* Contact Form Section */}
-       <section className="py-20">
+       <section id="contact-form-section" className="py-20">
          <div className="container mx-auto px-4">
            <motion.div 
              initial={{ opacity: 0, y: 30 }}
@@ -1087,7 +1091,11 @@ export default function Home() {
                               <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full text-white py-3 rounded-lg font-semibold transition-colors mb-6"
+                  onClick={() => {
+                    const element = document.getElementById('contact-form-section');
+                    element?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full text-white py-3 rounded-lg font-semibold transition-colors mb-6 cursor-pointer"
                   style={{ backgroundColor: '#FF0201' }}
                 >
                   سجل الآن وادفع لاحقاً
