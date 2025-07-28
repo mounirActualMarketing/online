@@ -354,7 +354,7 @@ export default function Home() {
           <div className="flex items-center">
             <div className="w-48 h-16 relative">
               <Image 
-                src="/logo.png" 
+                src="/logowhite.png" 
                 alt="Wall Street English Logo"
                 fill
                 className="object-contain"
@@ -1119,7 +1119,7 @@ export default function Home() {
             <div className="flex items-center justify-center mb-6">
               <div className="w-16 h-16 relative">
           <Image
-                  src="/logo.png" 
+                  src="/logowhite.png" 
                   alt="Wall Street English Logo"
                   fill
                   className="object-contain"
