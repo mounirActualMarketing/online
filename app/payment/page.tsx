@@ -177,12 +177,7 @@ export default function Payment() {
   const [formData, setFormData] = useState({
     email: '',
     phone: '',
-    fullName: '',
-    cardNumber: '',
-    expiryMonth: '',
-    expiryYear: '',
-    cvv: '',
-    cardName: ''
+    fullName: ''
   });
   const router = useRouter();
 
@@ -201,19 +196,100 @@ export default function Payment() {
   const handlePayment = async () => {
     setIsProcessing(true);
     
-    // Track Facebook event
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      (window as any).fbq('track', 'Purchase', {
-        value: 27,
-        currency: 'SAR'
-      });
-    }
+    try {
+      // Validate form data for credit card payments
+      if (selectedPayment === 'credit-card') {
+        if (!formData.fullName || !formData.email || !formData.phone) {
+          alert('يرجى ملء جميع البيانات المطلوبة');
+          setIsProcessing(false);
+          return;
+        }
+      }
 
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    // Redirect to thank you page
-    router.push('/thank-you');
+      // Track Facebook event
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'InitiateCheckout', {
+          value: 27,
+          currency: 'SAR'
+        });
+      }
+
+      if (selectedPayment === 'credit-card') {
+        // Process payment with ClickPay
+        const response = await fetch('/api/clickpay', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fullName: formData.fullName,
+            email: formData.email,
+            phone: formData.phone,
+            amount: 27,
+            currency: 'SAR',
+          }),
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          console.error('Payment failed:', result.error);
+          alert('فشل في معالجة الدفع. يرجى المحاولة مرة أخرى.');
+          setIsProcessing(false);
+          return;
+        }
+
+        // Check if redirect is required (ClickPay hosted payment page)
+        if (result.requiresRedirect && result.redirectUrl) {
+          // Track Facebook event
+          if (typeof window !== 'undefined' && (window as any).fbq) {
+            (window as any).fbq('track', 'AddPaymentInfo');
+          }
+          
+          // Redirect to ClickPay payment page
+          window.location.href = result.redirectUrl;
+          return;
+        }
+
+        // Direct payment result (if no redirect needed)
+        if (result.paymentResult) {
+          if (result.paymentResult.response_status === 'A') {
+            // Payment approved
+            if (typeof window !== 'undefined' && (window as any).fbq) {
+              (window as any).fbq('track', 'Purchase', {
+                value: 27,
+                currency: 'SAR'
+              });
+            }
+            router.push(`/thank-you?payment=success&ref=${result.transactionRef}`);
+          } else {
+            // Payment declined
+            alert(`فشل في الدفع: ${result.paymentResult.response_message}`);
+            setIsProcessing(false);
+          }
+          return;
+        }
+      } else {
+        // Handle other payment methods (bank transfer, Apple Pay, STC Pay)
+        // For now, simulate processing and redirect
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Track Facebook event
+        if (typeof window !== 'undefined' && (window as any).fbq) {
+          (window as any).fbq('track', 'Purchase', {
+            value: 27,
+            currency: 'SAR'
+          });
+        }
+        
+        router.push('/thank-you?payment=pending');
+      }
+
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('حدث خطأ أثناء معالجة الدفع. يرجى المحاولة مرة أخرى.');
+      setIsProcessing(false);
+    }
   };
 
   const paymentMethods = [
@@ -394,103 +470,49 @@ export default function Payment() {
                   </div>
                 </div>
 
-                {/* Credit Card Form */}
+                {/* Credit Card Info */}
                 {selectedPayment === 'credit-card' && (
                   <motion.div 
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     className="mb-8"
                   >
-                    <h3 className="text-xl font-bold mb-4" style={{ color: '#0e25ac' }}>
-                      تفاصيل البطاقة
-                    </h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          رقم البطاقة
-                        </label>
-                        <div className="relative">
-                          <CreditCard className="absolute right-3 top-3 w-5 h-5 text-gray-400" />
-                          <input
-                            type="text"
-                            name="cardNumber"
-                            value={formData.cardNumber}
-                            onChange={handleInputChange}
-                            className="w-full pr-10 pl-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="1234 5678 9012 3456"
-                            maxLength={19}
-                            required
-                          />
+                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                          <CreditCard className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold" style={{ color: '#0e25ac' }}>
+                            الدفع بالبطاقة الائتمانية
+                          </h3>
+                          <p className="text-sm text-blue-600">
+                            مدعوم بواسطة ClickPay - نظام دفع آمن ومعتمد
+                          </p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-3 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            الشهر
-                          </label>
-                          <select
-                            name="expiryMonth"
-                            value={formData.expiryMonth}
-                            onChange={(e) => setFormData(prev => ({ ...prev, expiryMonth: e.target.value }))}
-                            className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            required
-                          >
-                            <option value="">الشهر</option>
-                            {Array.from({ length: 12 }, (_, i) => (
-                              <option key={i + 1} value={i + 1}>
-                                {(i + 1).toString().padStart(2, '0')}
-                              </option>
-                            ))}
-                          </select>
+                      
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
+                          <div className="text-blue-600 font-bold text-lg">VISA</div>
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            السنة
-                          </label>
-                          <select
-                            name="expiryYear"
-                            value={formData.expiryYear}
-                            onChange={(e) => setFormData(prev => ({ ...prev, expiryYear: e.target.value }))}
-                            className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            required
-                          >
-                            <option value="">السنة</option>
-                            {Array.from({ length: 10 }, (_, i) => (
-                              <option key={i} value={new Date().getFullYear() + i}>
-                                {new Date().getFullYear() + i}
-                              </option>
-                            ))}
-                          </select>
+                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
+                          <div className="text-red-600 font-bold text-lg">MasterCard</div>
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            CVV
-                          </label>
-                          <input
-                            type="text"
-                            name="cvv"
-                            value={formData.cvv}
-                            onChange={handleInputChange}
-                            className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="123"
-                            maxLength={4}
-                            required
-                          />
+                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
+                          <div className="text-blue-800 font-bold text-sm">American Express</div>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
+                          <div className="text-green-600 font-bold text-lg">mada</div>
                         </div>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          اسم حامل البطاقة
-                        </label>
-                        <input
-                          type="text"
-                          name="cardName"
-                          value={formData.cardName}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="الاسم كما يظهر على البطاقة"
-                          required
-                        />
+
+                      <div className="flex items-start gap-3 text-sm text-blue-700">
+                        <Shield className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium mb-1">دفع آمن ومشفر</p>
+                          <p>ستتم إعادة توجيهك إلى صفحة الدفع الآمنة لإدخال بيانات البطاقة</p>
+                        </div>
                       </div>
                     </div>
                   </motion.div>

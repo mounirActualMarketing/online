@@ -181,6 +181,8 @@ const SocialProofTicker = () => {
 // Main Component
 export default function ThankYou() {
   const [mounted, setMounted] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<'success' | 'pending' | 'failed' | 'upsell'>('upsell');
+  const [transactionRef, setTransactionRef] = useState<string | null>(null);
 
   const handlePurchase = () => {
     if (typeof window !== 'undefined' && (window as any).fbq) {
@@ -190,11 +192,295 @@ export default function ThankYou() {
 
   useEffect(() => {
     setMounted(true);
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      (window as any).fbq('track', 'CompleteRegistration');
+    
+    // Check URL parameters for payment status
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const payment = urlParams.get('payment');
+      const ref = urlParams.get('ref');
+      const tranRef = urlParams.get('tran_ref');
+      const cartId = urlParams.get('cart_id');
+      
+      if (payment === 'success') {
+        setPaymentStatus('success');
+        setTransactionRef(ref || tranRef);
+        
+        // Track successful purchase
+        if ((window as any).fbq) {
+          (window as any).fbq('track', 'Purchase', {
+            value: 27,
+            currency: 'SAR',
+            content_ids: ['wse-online-course'],
+            content_type: 'product'
+          });
+        }
+        
+        if ((window as any).snaptr) {
+          (window as any).snaptr('track', 'PURCHASE', {
+            price: 27,
+            currency: 'SAR'
+          });
+        }
+        
+      } else if (payment === 'pending') {
+        setPaymentStatus('pending');
+        setTransactionRef(ref || tranRef);
+        
+      } else if (payment === 'failed') {
+        setPaymentStatus('failed');
+        
+      } else {
+        // Default to upsell page
+        setPaymentStatus('upsell');
+        if ((window as any).fbq) {
+          (window as any).fbq('track', 'CompleteRegistration');
+        }
+      }
+      
+      // If we have transaction details, verify payment status
+      if ((tranRef || cartId) && payment !== 'failed') {
+        verifyPaymentStatus(tranRef, cartId);
+      }
     }
   }, []);
 
+  const verifyPaymentStatus = async (tranRef: string | null, cartId: string | null) => {
+    try {
+      const response = await fetch('/api/clickpay/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          transactionRef: tranRef,
+          cartId: cartId,
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success && result.isApproved) {
+        setPaymentStatus('success');
+        setTransactionRef(result.transactionRef);
+      } else if (result.success && !result.isApproved) {
+        setPaymentStatus('failed');
+      }
+    } catch (error) {
+      console.error('Payment verification error:', error);
+      // Keep current status if verification fails
+    }
+  };
+
+  // Success Page Component
+  const SuccessPage = () => (
+    <div className="text-center space-y-6">
+      <motion.div 
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.2, type: "spring" }}
+        className="w-20 h-20 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center shadow-lg"
+      >
+        <CheckCircle className="w-10 h-10 text-green-600" />
+      </motion.div>
+      
+      <h1 className="text-4xl font-bold text-green-600 mb-4">
+        تم الدفع بنجاح! 🎉
+      </h1>
+      
+      <p className="text-xl text-gray-600 mb-6">
+        مرحباً بك في عائلة Wall Street English
+      </p>
+      
+      {transactionRef && (
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <p className="text-sm text-gray-600">
+            رقم المعاملة: <span className="font-mono font-bold">{transactionRef}</span>
+          </p>
+        </div>
+      )}
+      
+      <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-xl">
+        <h3 className="text-2xl font-bold mb-4" style={{ color: '#0e25ac' }}>
+          ماذا بعد؟
+        </h3>
+        <div className="space-y-4 text-right">
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <span>سيتم التواصل معك خلال 24 ساعة</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <span>ستحصل على رابط الوصول للمنصة</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <span>سيتم تحديد موعد الجلسة التقييمية</span>
+          </div>
+        </div>
+      </div>
+      
+      <Link href="/">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+        >
+          العودة للصفحة الرئيسية
+        </motion.button>
+      </Link>
+    </div>
+  );
+
+  // Pending Page Component
+  const PendingPage = () => (
+    <div className="text-center space-y-6">
+      <motion.div 
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.2, type: "spring" }}
+        className="w-20 h-20 mx-auto bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-full flex items-center justify-center shadow-lg"
+      >
+        <Timer className="w-10 h-10 text-yellow-600 animate-pulse" />
+      </motion.div>
+      
+      <h1 className="text-4xl font-bold text-yellow-600 mb-4">
+        دفعتك قيد المراجعة ⏳
+      </h1>
+      
+      <p className="text-xl text-gray-600 mb-6">
+        سيتم تأكيد دفعتك خلال دقائق معدودة
+      </p>
+      
+      {transactionRef && (
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <p className="text-sm text-gray-600">
+            رقم المعاملة: <span className="font-mono font-bold">{transactionRef}</span>
+          </p>
+        </div>
+      )}
+      
+      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl">
+        <h3 className="text-2xl font-bold mb-4" style={{ color: '#0e25ac' }}>
+          لا تقلق!
+        </h3>
+        <p className="text-gray-600">
+          ستصلك رسالة تأكيد على البريد الإلكتروني بمجرد تأكيد الدفع
+        </p>
+      </div>
+      
+      <Link href="/">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+        >
+          العودة للصفحة الرئيسية
+        </motion.button>
+      </Link>
+    </div>
+  );
+
+  // Failed Page Component
+  const FailedPage = () => (
+    <div className="text-center space-y-6">
+      <motion.div 
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.2, type: "spring" }}
+        className="w-20 h-20 mx-auto bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center shadow-lg"
+      >
+        <Shield className="w-10 h-10 text-red-600" />
+      </motion.div>
+      
+      <h1 className="text-4xl font-bold text-red-600 mb-4">
+        فشل في الدفع ❌
+      </h1>
+      
+      <p className="text-xl text-gray-600 mb-6">
+        لم تتم عملية الدفع بنجاح، يرجى المحاولة مرة أخرى
+      </p>
+      
+      <div className="bg-gradient-to-r from-red-50 to-pink-50 p-6 rounded-xl">
+        <h3 className="text-2xl font-bold mb-4" style={{ color: '#0e25ac' }}>
+          أسباب محتملة:
+        </h3>
+        <div className="space-y-2 text-right text-gray-600">
+          <p>• رصيد غير كافٍ في البطاقة</p>
+          <p>• بيانات البطاقة غير صحيحة</p>
+          <p>• مشكلة مؤقتة في الشبكة</p>
+        </div>
+      </div>
+      
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <Link href="/payment">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            حاول مرة أخرى
+          </motion.button>
+        </Link>
+        
+        <Link href="/">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-300"
+          >
+            العودة للصفحة الرئيسية
+          </motion.button>
+        </Link>
+      </div>
+    </div>
+  );
+
+  if (paymentStatus === 'success') {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center py-12" dir="rtl">
+        <div className="w-full max-w-4xl mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <SuccessPage />
+          </motion.div>
+        </div>
+      </main>
+    );
+  }
+
+  if (paymentStatus === 'pending') {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 flex items-center justify-center py-12" dir="rtl">
+        <div className="w-full max-w-4xl mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <PendingPage />
+          </motion.div>
+        </div>
+      </main>
+    );
+  }
+
+  if (paymentStatus === 'failed') {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50 flex items-center justify-center py-12" dir="rtl">
+        <div className="w-full max-w-4xl mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <FailedPage />
+          </motion.div>
+        </div>
+      </main>
+    );
+  }
+
+  // Default upsell page
   return (
     <main className="h-screen bg-white overflow-hidden flex items-center justify-center" dir="rtl">
       <div className="w-full max-w-6xl mx-auto px-6 py-8">
