@@ -75,7 +75,28 @@ interface ClickPayResponse {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    let body;
+    try {
+      body = await request.json();
+    } catch (jsonError) {
+      console.error('JSON Parse Error:', jsonError);
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Invalid JSON in request body',
+          details: jsonError instanceof Error ? jsonError.message : 'Unknown JSON error'
+        },
+        { status: 400 }
+      );
+    }
+    console.log('ClickPay API Request received:', {
+      hasFullName: !!body.fullName,
+      hasEmail: !!body.email,
+      hasPhone: !!body.phone,
+      amount: body.amount || 27,
+      currency: body.currency || 'SAR'
+    });
+
     const { 
       fullName, 
       email, 
@@ -85,12 +106,45 @@ export async function POST(request: NextRequest) {
       orderId 
     } = body;
 
-    // Validate required environment variables
-    if (!CLICKPAY_CONFIG.profileId || !CLICKPAY_CONFIG.serverKey) {
+    // Validate required fields
+    if (!fullName || !email || !phone) {
+      console.error('Missing required fields:', {
+        fullName: !!fullName,
+        email: !!email,
+        phone: !!phone
+      });
+      
       return NextResponse.json(
         { 
           success: false, 
-          error: 'ClickPay credentials not configured' 
+          error: 'Missing required fields',
+          details: {
+            missingFullName: !fullName,
+            missingEmail: !email,
+            missingPhone: !phone
+          }
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate required environment variables
+    if (!CLICKPAY_CONFIG.profileId || !CLICKPAY_CONFIG.serverKey) {
+      console.error('ClickPay Configuration Error:', {
+        hasProfileId: !!CLICKPAY_CONFIG.profileId,
+        hasServerKey: !!CLICKPAY_CONFIG.serverKey,
+        endpoint: CLICKPAY_CONFIG.endpoint
+      });
+      
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'ClickPay credentials not configured',
+          details: {
+            missingProfileId: !CLICKPAY_CONFIG.profileId,
+            missingServerKey: !CLICKPAY_CONFIG.serverKey,
+            endpoint: CLICKPAY_CONFIG.endpoint
+          }
         },
         { status: 500 }
       );
