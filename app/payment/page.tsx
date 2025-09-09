@@ -12,9 +12,6 @@ import {
   Mail,
   Phone,
   Globe,
-  Building,
-  Smartphone,
-  Wallet,
   Timer,
   Gift,
   Users,
@@ -197,13 +194,11 @@ export default function Payment() {
     setIsProcessing(true);
     
     try {
-      // Validate form data for credit card payments
-      if (selectedPayment === 'credit-card') {
-        if (!formData.fullName || !formData.email || !formData.phone) {
-          alert('يرجى ملء جميع البيانات المطلوبة');
-          setIsProcessing(false);
-          return;
-        }
+      // Validate required form data
+      if (!formData.fullName || !formData.email || !formData.phone) {
+        alert('يرجى ملء جميع البيانات المطلوبة');
+        setIsProcessing(false);
+        return;
       }
 
       // Track Facebook event
@@ -214,75 +209,59 @@ export default function Payment() {
         });
       }
 
-      if (selectedPayment === 'credit-card') {
-        // Process payment with ClickPay
-        const response = await fetch('/api/clickpay', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            fullName: formData.fullName,
-            email: formData.email,
-            phone: formData.phone,
-            amount: 27,
-            currency: 'SAR',
-          }),
-        });
+      // Process payment with ClickPay
+      const response = await fetch('/api/clickpay', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          amount: 27,
+          currency: 'SAR',
+        }),
+      });
 
-        const result = await response.json();
+      const result = await response.json();
 
-        if (!result.success) {
-          console.error('Payment failed:', result.error);
-          alert('فشل في معالجة الدفع. يرجى المحاولة مرة أخرى.');
-          setIsProcessing(false);
-          return;
-        }
+      if (!result.success) {
+        console.error('Payment failed:', result.error);
+        alert('فشل في معالجة الدفع. يرجى المحاولة مرة أخرى.');
+        setIsProcessing(false);
+        return;
+      }
 
-        // Check if redirect is required (ClickPay hosted payment page)
-        if (result.requiresRedirect && result.redirectUrl) {
-          // Track Facebook event
-          if (typeof window !== 'undefined' && (window as any).fbq) {
-            (window as any).fbq('track', 'AddPaymentInfo');
-          }
-          
-          // Redirect to ClickPay payment page
-          window.location.href = result.redirectUrl;
-          return;
-        }
-
-        // Direct payment result (if no redirect needed)
-        if (result.paymentResult) {
-          if (result.paymentResult.response_status === 'A') {
-            // Payment approved
-            if (typeof window !== 'undefined' && (window as any).fbq) {
-              (window as any).fbq('track', 'Purchase', {
-                value: 27,
-                currency: 'SAR'
-              });
-            }
-            router.push(`/thank-you?payment=success&ref=${result.transactionRef}`);
-          } else {
-            // Payment declined
-            alert(`فشل في الدفع: ${result.paymentResult.response_message}`);
-            setIsProcessing(false);
-          }
-          return;
-        }
-      } else {
-        // Handle other payment methods (bank transfer, Apple Pay, STC Pay)
-        // For now, simulate processing and redirect
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
+      // Check if redirect is required (ClickPay hosted payment page)
+      if (result.requiresRedirect && result.redirectUrl) {
         // Track Facebook event
         if (typeof window !== 'undefined' && (window as any).fbq) {
-          (window as any).fbq('track', 'Purchase', {
-            value: 27,
-            currency: 'SAR'
-          });
+          (window as any).fbq('track', 'AddPaymentInfo');
         }
         
-        router.push('/thank-you?payment=pending');
+        // Redirect to ClickPay payment page
+        window.location.href = result.redirectUrl;
+        return;
+      }
+
+      // Direct payment result (if no redirect needed)
+      if (result.paymentResult) {
+        if (result.paymentResult.response_status === 'A') {
+          // Payment approved
+          if (typeof window !== 'undefined' && (window as any).fbq) {
+            (window as any).fbq('track', 'Purchase', {
+              value: 27,
+              currency: 'SAR'
+            });
+          }
+          router.push(`/thank-you?payment=success&ref=${result.transactionRef}`);
+        } else {
+          // Payment declined
+          alert(`فشل في الدفع: ${result.paymentResult.response_message}`);
+          setIsProcessing(false);
+        }
+        return;
       }
 
     } catch (error) {
@@ -297,25 +276,7 @@ export default function Payment() {
       id: 'credit-card',
       icon: <CreditCard className="w-6 h-6" />,
       title: 'بطاقة ائتمانية',
-      description: 'Visa, MasterCard, American Express'
-    },
-    {
-      id: 'bank-transfer',
-      icon: <Building className="w-6 h-6" />,
-      title: 'تحويل بنكي',
-      description: 'جميع البنوك السعودية'
-    },
-    {
-      id: 'apple-pay',
-      icon: <Smartphone className="w-6 h-6" />,
-      title: 'Apple Pay',
-      description: 'دفع سريع وآمن'
-    },
-    {
-      id: 'stc-pay',
-      icon: <Wallet className="w-6 h-6" />,
-      title: 'STC Pay',
-      description: 'محفظة stc pay'
+      description: 'Visa, MasterCard, American Express, mada'
     }
   ];
 
@@ -471,12 +432,11 @@ export default function Payment() {
                 </div>
 
                 {/* Credit Card Info */}
-                {selectedPayment === 'credit-card' && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    className="mb-8"
-                  >
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="mb-8"
+                >
                     <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
                       <div className="flex items-center gap-4 mb-4">
                         <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -515,8 +475,7 @@ export default function Payment() {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
-                )}
+                </motion.div>
 
                 {/* Security Features */}
                 <div className="bg-green-50 p-4 rounded-lg mb-8">
