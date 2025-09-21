@@ -3,6 +3,12 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
+// Debug environment variables
+console.log('🔧 NextAuth Environment Check:')
+console.log('NEXTAUTH_URL:', process.env.NEXTAUTH_URL)
+console.log('NEXTAUTH_SECRET:', process.env.NEXTAUTH_SECRET ? '***SET***' : 'NOT SET')
+console.log('DATABASE_URL:', process.env.DATABASE_URL ? '***SET***' : 'NOT SET')
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
