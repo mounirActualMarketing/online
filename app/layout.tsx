@@ -82,7 +82,7 @@ export default function RootLayout({
           `}
         </Script>
         {/* End Snap Pixel Code */}
-        <Providers session={null}>
+        <Providers>
           {children}
         </Providers>
       </body>
