@@ -1,8 +1,6 @@
-import { auth } from "@/auth";
-
 import { NextRequest, NextResponse } from 'next/server';
-
-
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 export const runtime = 'nodejs';
@@ -10,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
+    const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -20,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if user is admin
-    if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
+    if (session.user.role !== 'ADMIN' && session.user.role !== 'SUPER_ADMIN') {
       return NextResponse.json(
         { success: false, error: 'Access denied' },
         { status: 403 }
