@@ -1,6 +1,15 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, ActivityType } from '@prisma/client'
 
 const prisma = new PrismaClient()
+
+interface ActivityData {
+  title: string;
+  type: string;
+  order: number;
+  content: string;
+  isRequired: boolean;
+  description?: string;
+}
 
 const assessmentSections = [
   {
@@ -369,19 +378,30 @@ async function main() {
     
     // Create activities for this section
     for (const activityData of activities) {
+      const activity = activityData as ActivityData;
       await prisma.activity.upsert({
         where: { 
           sectionId_order: {
             sectionId: createdSection.id,
-            order: activityData.order
+            order: activity.order
           }
         },
         update: {
-          ...activityData,
+          title: activity.title,
+          description: activity.description || null,
+          type: activity.type as ActivityType,
+          content: activity.content,
+          order: activity.order,
+          isRequired: activity.isRequired,
           sectionId: createdSection.id,
         },
         create: {
-          ...activityData,
+          title: activity.title,
+          description: activity.description || null,
+          type: activity.type as ActivityType,
+          content: activity.content,
+          order: activity.order,
+          isRequired: activity.isRequired,
           sectionId: createdSection.id,
         },
       })

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Kufi_Arabic } from "next/font/google";
 import Script from "next/script";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const notoKufiArabic = Noto_Kufi_Arabic({
@@ -81,7 +82,9 @@ export default function RootLayout({
           `}
         </Script>
         {/* End Snap Pixel Code */}
-        {children}
+        <Providers session={null}>
+          {children}
+        </Providers>
       </body>
     </html>
   );
