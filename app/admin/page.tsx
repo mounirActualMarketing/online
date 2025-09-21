@@ -1,6 +1,6 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
+import { useState } from '';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -59,7 +59,7 @@ interface UserData {
 }
 
 export default function AdminDashboard() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useState();
   const router = useRouter();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [users, setUsers] = useState<UserData[]>([]);
@@ -75,7 +75,7 @@ export default function AdminDashboard() {
     }
 
     if (status === 'authenticated') {
-      if (session?.user?.role !== 'ADMIN' && session?.user?.role !== 'SUPER_ADMIN') {
+      if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
         router.push('/assessment');
         return;
       }
@@ -170,9 +170,9 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-gray-600">
                 <User className="w-5 h-5" />
-                <span>{session?.user?.name}</span>
+                <span>{user?.name}</span>
                 <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                  {session?.user?.role === 'SUPER_ADMIN' ? 'مدير عام' : 'مدير'}
+                  {user?.role === 'SUPER_ADMIN' ? 'مدير عام' : 'مدير'}
                 </span>
               </div>
               <button

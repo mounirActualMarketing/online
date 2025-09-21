@@ -1,6 +1,7 @@
+import { getCurrentUser } from '@/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../../../auth/[...nextauth]/authOptions';
+
+
 import { prisma } from '@/lib/prisma';
 
 export async function POST(
@@ -8,9 +9,9 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const user = await getCurrentUser);
     
-    if (!session?.user?.id) {
+    if (!user?.id) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -45,7 +46,7 @@ export async function POST(
     const userResponse = await prisma.userResponse.upsert({
       where: {
         userId_activityId: {
-          userId: session.user.id,
+          userId: user.id,
           activityId: activityId
         }
       },
@@ -54,7 +55,7 @@ export async function POST(
         updatedAt: new Date()
       },
       create: {
-        userId: session.user.id,
+        userId: user.id,
         activityId: activityId,
         response: response.trim()
       }
