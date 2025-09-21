@@ -3,12 +3,6 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
-// Debug environment variables
-console.log('🔧 NextAuth Environment Check:')
-console.log('NEXTAUTH_URL:', process.env.NEXTAUTH_URL)
-console.log('NEXTAUTH_SECRET:', process.env.NEXTAUTH_SECRET ? '***SET***' : 'NOT SET')
-console.log('DATABASE_URL:', process.env.DATABASE_URL ? '***SET***' : 'NOT SET')
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -20,37 +14,23 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) {
-            console.log('Missing credentials')
             return null
           }
 
-          console.log('Attempting to find user:', credentials.email)
-          
           const user = await prisma.user.findUnique({
-            where: {
-              email: credentials.email
-            }
+            where: { email: credentials.email }
           })
 
-          if (!user) {
-            console.log('User not found:', credentials.email)
+          if (!user || !user.password) {
             return null
           }
 
-          if (!user.password) {
-            console.log('User has no password:', credentials.email)
-            return null
-          }
-
-          console.log('Comparing password for user:', credentials.email)
           const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
 
           if (!isPasswordValid) {
-            console.log('Invalid password for user:', credentials.email)
             return null
           }
 
-          console.log('Authentication successful for user:', credentials.email)
           return {
             id: user.id,
             email: user.email,
@@ -64,9 +44,7 @@ export const authOptions: NextAuthOptions = {
       }
     })
   ],
-  session: {
-    strategy: 'jwt'
-  },
+  session: { strategy: 'jwt' },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -86,17 +64,5 @@ export const authOptions: NextAuthOptions = {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
     error: '/auth/error'
-  },
-  debug: process.env.NODE_ENV === 'development',
-  logger: {
-    error(code, metadata) {
-      console.error('NextAuth Error:', code, metadata)
-    },
-    warn(code) {
-      console.warn('NextAuth Warning:', code)
-    },
-    debug(code, metadata) {
-      console.log('NextAuth Debug:', code, metadata)
-    }
   }
 }
