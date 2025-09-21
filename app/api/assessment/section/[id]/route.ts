@@ -1,4 +1,5 @@
-import { getCurrentUser } from '@/lib/auth';
+import { auth } from "@/auth";
+
 import { NextRequest, NextResponse } from 'next/server';
 
 
@@ -9,9 +10,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const user = await getCurrentUser);
+    const session = await auth();
     
-    if (!user?.id) {
+    if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -41,7 +42,7 @@ export async function GET(
     const activityIds = section.activities.map(a => a.id);
     const userResponses = await prisma.userResponse.findMany({
       where: {
-        userId: user.id,
+        userId: session.user.id,
         activityId: { in: activityIds }
       }
     });
@@ -56,7 +57,7 @@ export async function GET(
         const previousProgress = await prisma.userProgress.findUnique({
           where: {
             userId_sectionId: {
-              userId: user.id,
+              userId: session.user.id,
               sectionId: previousSection.id
             }
           }
@@ -75,7 +76,7 @@ export async function GET(
     await prisma.userProgress.upsert({
       where: {
         userId_sectionId: {
-          userId: user.id,
+          userId: session.user.id,
           sectionId: section.id
         }
       },
@@ -84,7 +85,7 @@ export async function GET(
         startedAt: new Date()
       },
       create: {
-        userId: user.id,
+        userId: session.user.id,
         sectionId: section.id,
         status: 'IN_PROGRESS',
         startedAt: new Date()

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { 
@@ -31,31 +32,18 @@ interface AssessmentSection {
 }
 
 export default function AssessmentDashboard() {
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const { data: session, status } = useSession()
   const [sections, setSections] = useState<AssessmentSection[]>([])
   const [userProgress, setUserProgress] = useState<any>(null)
   const router = useRouter()
 
   useEffect(() => {
-    fetch('/api/auth/me')
-      .then(res => res.json())
-      .then(data => {
-        if (data.user) {
-          setUser(data.user)
-        } else {
-          router.push('/auth/signin')
-        }
-      })
-      .catch(() => router.push('/auth/signin'))
-      .finally(() => setLoading(false))
-  }, [])
-
-  useEffect(() => {
-    if (user) {
+    if (status === 'unauthenticated') {
+      router.push('/auth/signin')
+    } else if (status === 'authenticated') {
       fetchAssessmentData()
     }
-  }, [user])
+  }, [status, router])
 
   const fetchAssessmentData = async () => {
     try {
@@ -74,11 +62,10 @@ export default function AssessmentDashboard() {
   };
 
   const handleLogout = async () => {
-    document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
-    router.push('/auth/signin')
+    await signOut({ callbackUrl: '/auth/signin' })
   }
 
-  if (loading) {
+  if (status === 'loading') {
     return (
       <main className="min-h-screen bg-gradient-to-br from-blue-50 to-red-50 flex items-center justify-center" dir="rtl">
         <div className="text-center">
@@ -89,7 +76,7 @@ export default function AssessmentDashboard() {
     )
   }
 
-  if (!user) {
+  if (!session?.user) {
     return null
   }
 
@@ -112,7 +99,7 @@ export default function AssessmentDashboard() {
               />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-800">مرحباً {user.name}</h1>
+              <h1 className="text-xl font-bold text-gray-800">مرحباً {session.user.name}</h1>
               <p className="text-sm text-gray-600">أهلاً بك في تقييم الطلاقة</p>
             </div>
           </div>

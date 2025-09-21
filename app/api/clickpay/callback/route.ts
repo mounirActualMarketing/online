@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
         // Store payment transaction
         await prisma.payment.create({
           data: {
-            userId: user.id,
+            userId: session.user.id,
             transactionRef: tran_ref,
             cartId: cart_id,
             amount: parseFloat(cart_amount),
@@ -125,10 +125,10 @@ export async function POST(request: NextRequest) {
 
         // Initialize user assessment
         await prisma.userAssessment.upsert({
-          where: { userId: user.id },
+          where: { userId: session.user.id },
           update: { status: 'NOT_STARTED' },
           create: {
-            userId: user.id,
+            userId: session.user.id,
             status: 'NOT_STARTED',
           },
         });

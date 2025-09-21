@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
@@ -25,22 +26,17 @@ export default function SignIn() {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        if (data.user.role === 'ADMIN' || data.user.role === 'SUPER_ADMIN') {
-          router.push('/admin');
-        } else {
-          router.push('/assessment');
-        }
-      } else {
+      if (result?.error) {
         setError('بيانات الدخول غير صحيحة');
+      } else {
+        // Redirect based on user role (we'll handle this in the callback)
+        router.push('/assessment');
       }
     } catch (error) {
       setError('حدث خطأ أثناء تسجيل الدخول');

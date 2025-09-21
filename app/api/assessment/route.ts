@@ -1,6 +1,6 @@
-import { getCurrentUser } from '@/lib/auth';
+import { auth } from "@/auth";
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth';
+import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 
 export const runtime = 'nodejs';
@@ -8,9 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -30,12 +30,12 @@ export async function GET(request: NextRequest) {
 
     // Fetch user's assessment
     const userAssessment = await prisma.userAssessment.findUnique({
-      where: { userId: user.id }
+      where: { userId: session.session.user.id }
     });
 
     // Fetch user's progress for each section
     const userProgress = await prisma.userProgress.findMany({
-      where: { userId: user.id },
+      where: { userId: session.session.user.id },
       include: {
         section: true
       }

@@ -1,4 +1,5 @@
-import { getCurrentUser } from '@/lib/auth';
+import { auth } from "@/auth";
+
 import { NextRequest, NextResponse } from 'next/server';
 
 
@@ -9,9 +10,9 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const user = await getCurrentUser);
+    const session = await auth();
     
-    if (!user?.id) {
+    if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -41,7 +42,7 @@ export async function POST(
     const requiredActivityIds = section.activities.map(a => a.id);
     const userResponses = await prisma.userResponse.findMany({
       where: {
-        userId: user.id,
+        userId: session.user.id,
         activityId: { in: requiredActivityIds }
       }
     });
@@ -71,7 +72,7 @@ export async function POST(
     await prisma.userProgress.upsert({
       where: {
         userId_sectionId: {
-          userId: user.id,
+          userId: session.user.id,
           sectionId: sectionId
         }
       },
@@ -81,7 +82,7 @@ export async function POST(
         score: score
       },
       create: {
-        userId: user.id,
+        userId: session.user.id,
         sectionId: sectionId,
         status: 'COMPLETED',
         startedAt: new Date(),
@@ -96,7 +97,7 @@ export async function POST(
     });
 
     const allUserProgress = await prisma.userProgress.findMany({
-      where: { userId: user.id }
+      where: { userId: session.user.id }
     });
 
     const completedSections = allUserProgress.filter(p => p.status === 'COMPLETED');
@@ -107,14 +108,14 @@ export async function POST(
       
       // Update user assessment to completed
       await prisma.userAssessment.upsert({
-        where: { userId: user.id },
+        where: { userId: session.user.id },
         update: {
           status: 'COMPLETED',
           completedAt: new Date(),
           score: overallScore
         },
         create: {
-          userId: user.id,
+          userId: session.user.id,
           status: 'COMPLETED',
           startedAt: new Date(),
           completedAt: new Date(),

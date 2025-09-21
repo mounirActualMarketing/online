@@ -1,4 +1,5 @@
-import { getCurrentUser } from '@/lib/auth';
+import { auth } from "@/auth";
+
 import { NextRequest, NextResponse } from 'next/server';
 
 
@@ -9,9 +10,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser);
+    const session = await auth();
     
-    if (!user?.id) {
+    if (!session?.user?.id) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
