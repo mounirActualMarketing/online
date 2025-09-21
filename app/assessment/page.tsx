@@ -83,6 +83,8 @@ export default function AssessmentDashboard() {
   const completedSections = sections.filter(section => section.isCompleted).length
   const totalSections = sections.length
   const progressPercentage = totalSections > 0 ? (completedSections / totalSections) * 100 : 0
+  const hasStartedAssessment = sections.some(section => section.activities.some(activity => activity.isCompleted))
+  const firstSection = sections.find(section => section.order === 1)
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-red-50" dir="rtl">
@@ -143,9 +145,46 @@ export default function AssessmentDashboard() {
           </div>
         </motion.div>
 
+        {/* Start Assessment Button for new users */}
+        {!hasStartedAssessment && firstSection && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-lg p-8 mb-8 text-white text-center"
+          >
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <Play className="w-8 h-8" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold mb-4">مرحباً بك في تقييم الطلاقة!</h2>
+            <p className="text-green-100 mb-6 max-w-2xl mx-auto">
+              ابدأ رحلتك في تقييم مهاراتك في اللغة الإنجليزية. سيتم فتح الأقسام تدريجياً بعد إكمال القسم السابق.
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => router.push(`/assessment/section/${firstSection.id}`)}
+              className="inline-flex items-center gap-3 px-8 py-4 bg-white text-green-600 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-lg"
+            >
+              <Play className="w-6 h-6" />
+              ابدأ التقييم الآن
+            </motion.button>
+          </motion.div>
+        )}
+
         {/* Assessment Sections */}
         <div className="grid gap-6">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">أقسام التقييم</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-bold text-gray-800">أقسام التقييم</h3>
+            {hasStartedAssessment && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                <span>{completedSections} من {totalSections} مكتمل</span>
+              </div>
+            )}
+          </div>
           
           {sections.map((section, index) => (
             <motion.div
@@ -209,15 +248,22 @@ export default function AssessmentDashboard() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => router.push(`/assessment/section/${section.id}`)}
-                      className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all"
+                      className={`flex items-center gap-2 px-6 py-2 rounded-lg font-medium transition-all ${
+                        section.isCompleted
+                          ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800'
+                          : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800'
+                      }`}
                     >
                       <Play className="w-4 h-4" />
                       {section.isCompleted ? 'مراجعة' : 'ابدأ'}
                     </motion.button>
                   ) : (
-                    <span className="px-6 py-2 bg-gray-100 text-gray-500 rounded-lg font-medium">
-                      مقفل
-                    </span>
+                    <div className="flex items-center gap-2 px-6 py-2 bg-gray-100 text-gray-500 rounded-lg">
+                      <Lock className="w-4 h-4" />
+                      <span className="font-medium">
+                        {index === 0 ? 'جاري التحميل...' : 'أكمل القسم السابق أولاً'}
+                      </span>
+                    </div>
                   )}
                 </div>
               </div>

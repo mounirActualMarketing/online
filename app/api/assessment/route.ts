@@ -41,9 +41,72 @@ export async function GET(request: NextRequest) {
       }
     });
 
+    // Fetch user responses to determine completion
+    const userResponses = await prisma.userResponse.findMany({
+      where: { userId: session.user.id },
+      include: {
+        activity: {
+          include: {
+            section: true
+          }
+        }
+      }
+    });
+
+    // Process sections to add unlocking and completion logic
+    const processedSections = sections.map((section, index) => {
+      // Get responses for this section
+      const sectionResponses = userResponses.filter(
+        response => response.activity.sectionId === section.id
+      );
+
+      // Check if section is completed (all required activities have responses)
+      const requiredActivities = section.activities.filter(activity => activity.isRequired);
+      const completedRequiredActivities = requiredActivities.filter(activity =>
+        sectionResponses.some(response => response.activityId === activity.id)
+      );
+      const isCompleted = completedRequiredActivities.length === requiredActivities.length && requiredActivities.length > 0;
+
+      // Check if section is unlocked
+      let isUnlocked = false;
+      if (index === 0) {
+        // First section is always unlocked
+        isUnlocked = true;
+      } else {
+        // Check if previous section is completed
+        const previousSection = sections[index - 1];
+        const previousSectionResponses = userResponses.filter(
+          response => response.activity.sectionId === previousSection.id
+        );
+        const previousRequiredActivities = previousSection.activities.filter(activity => activity.isRequired);
+        const previousCompletedRequired = previousRequiredActivities.filter(activity =>
+          previousSectionResponses.some(response => response.activityId === activity.id)
+        );
+        isUnlocked = previousCompletedRequired.length === previousRequiredActivities.length && previousRequiredActivities.length > 0;
+      }
+
+      // Process activities
+      const processedActivities = section.activities.map(activity => ({
+        id: activity.id,
+        title: activity.title,
+        type: activity.type,
+        isCompleted: sectionResponses.some(response => response.activityId === activity.id)
+      }));
+
+      return {
+        id: section.id,
+        title: section.title,
+        description: section.description,
+        order: section.order,
+        isCompleted,
+        isUnlocked,
+        activities: processedActivities
+      };
+    });
+
     return NextResponse.json({
       success: true,
-      sections,
+      sections: processedSections,
       userAssessment,
       userProgress
     });
