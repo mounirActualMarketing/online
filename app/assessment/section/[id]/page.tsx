@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from '';
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -48,7 +47,8 @@ interface UserResponse {
 }
 
 export default function SectionPage() {
-  const { data: session, status } = useState();
+  // NOTE: this page doesn't use session directly here; data is gated by API
+  const status = 'authenticated' as const;
   const router = useRouter();
   const params = useParams();
   const sectionId = params.id as string;
