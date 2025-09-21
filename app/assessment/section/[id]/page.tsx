@@ -51,7 +51,7 @@ export default function SectionPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const params = useParams();
-  const sectionId = params.id as string;
+  const sectionId = params?.id as string;
   
   const [section, setSection] = useState<AssessmentSection | null>(null);
   const [userResponses, setUserResponses] = useState<UserResponse[]>([]);
