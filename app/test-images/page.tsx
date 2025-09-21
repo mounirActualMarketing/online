@@ -68,6 +68,7 @@ export default function TestImages() {
               <div className="mb-4">
                 <h3 className="text-sm font-semibold mb-2 text-gray-600">Regular img:</h3>
                 <div className="w-full h-48 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={image.src}
                     alt={image.name}

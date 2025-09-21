@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { generateRandomPassword, hashPassword } from '@/lib/utils';
+import { sendWelcomeEmail, sendAdminNotification } from '@/lib/email';
 
 interface ClickPayCallbackData {
   tran_ref: string;
@@ -81,38 +84,79 @@ export async function POST(request: NextRequest) {
         card_info: callbackData.payment_info,
       });
 
-      // Track successful payment with Facebook Pixel (if needed)
-      // Note: This is server-side, so you might want to store this info 
-      // and trigger client-side tracking on the thank-you page
+      try {
+        // Generate random password for the user
+        const randomPassword = generateRandomPassword(8);
+        const hashedPassword = await hashPassword(randomPassword);
 
-      // Example: Store in database (implement your database logic here)
-      /*
-      await storeTransaction({
-        transactionRef: tran_ref,
-        cartId: cart_id,
-        amount: parseFloat(cart_amount),
-        currency: callbackData.cart_currency,
-        customerName: customer_details.name,
-        customerEmail: customer_details.email,
-        customerPhone: customer_details.phone,
-        status: 'completed',
-        paymentMethod: callbackData.payment_info.payment_method,
-        cardType: callbackData.payment_info.card_type,
-        responseCode: payment_result.response_code,
-        transactionTime: payment_result.transaction_time,
-      });
-      */
+        // Create or update user in database
+        const user = await prisma.user.upsert({
+          where: { email: customer_details.email },
+          update: {
+            name: customer_details.name,
+            phone: customer_details.phone,
+            password: hashedPassword,
+          },
+          create: {
+            name: customer_details.name,
+            email: customer_details.email,
+            phone: customer_details.phone,
+            password: hashedPassword,
+            role: 'USER',
+          },
+        });
 
-      // Example: Send confirmation email
-      /*
-      await sendConfirmationEmail({
-        to: customer_details.email,
-        customerName: customer_details.name,
-        amount: cart_amount,
-        currency: callbackData.cart_currency,
-        transactionRef: tran_ref,
-      });
-      */
+        // Store payment transaction
+        await prisma.payment.create({
+          data: {
+            userId: user.id,
+            transactionRef: tran_ref,
+            cartId: cart_id,
+            amount: parseFloat(cart_amount),
+            currency: callbackData.cart_currency,
+            status: 'COMPLETED',
+            paymentMethod: callbackData.payment_info.payment_method,
+            cardType: callbackData.payment_info.card_type,
+            responseCode: payment_result.response_code,
+            responseMessage: payment_result.response_message,
+            transactionTime: new Date(payment_result.transaction_time),
+          },
+        });
+
+        // Initialize user assessment
+        await prisma.userAssessment.upsert({
+          where: { userId: user.id },
+          update: { status: 'NOT_STARTED' },
+          create: {
+            userId: user.id,
+            status: 'NOT_STARTED',
+          },
+        });
+
+        // Send welcome email with login credentials
+        await sendWelcomeEmail({
+          customerName: customer_details.name,
+          email: customer_details.email,
+          password: randomPassword,
+          loginUrl: `${process.env.APP_URL}/auth/signin`,
+          assessmentUrl: `${process.env.APP_URL}/assessment`,
+        });
+
+        // Send admin notification
+        await sendAdminNotification({
+          customerName: customer_details.name,
+          email: customer_details.email,
+          phone: customer_details.phone,
+          amount: parseFloat(cart_amount),
+          transactionRef: tran_ref,
+        });
+
+        console.log('✅ User created, emails sent successfully');
+
+      } catch (error) {
+        console.error('❌ Error processing successful payment:', error);
+        // Don't throw error here to avoid payment callback issues
+      }
 
     } else {
       console.log(`❌ Payment failed for cart ${cart_id}:`, {
