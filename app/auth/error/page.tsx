@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { AlertCircle, ArrowRight, RefreshCw } from 'lucide-react';
@@ -21,7 +22,7 @@ const errorMessages: Record<string, string> = {
   SessionRequired: 'يجب تسجيل الدخول أولاً'
 };
 
-export default function AuthError() {
+function ErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams?.get('error') || 'Default';
   const errorMessage = errorMessages[error] || errorMessages.Default;
@@ -111,5 +112,20 @@ export default function AuthError() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function AuthError() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-gradient-to-br from-blue-50 to-red-50 flex items-center justify-center" dir="rtl">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">جاري التحميل...</p>
+        </div>
+      </main>
+    }>
+      <ErrorContent />
+    </Suspense>
   );
 }
