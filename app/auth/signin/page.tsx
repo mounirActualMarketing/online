@@ -35,8 +35,15 @@ export default function SignIn() {
       if (result?.error) {
         setError('بيانات الدخول غير صحيحة');
       } else {
-        // Redirect based on user role (we'll handle this in the callback)
-        router.push('/assessment');
+        // Fetch session to check user role
+        const response = await fetch('/api/auth/session');
+        const session = await response.json();
+        
+        if (session?.user?.role === 'ADMIN' || session?.user?.role === 'SUPER_ADMIN') {
+          router.push('/admin');
+        } else {
+          router.push('/assessment');
+        }
       }
     } catch (error) {
       setError('حدث خطأ أثناء تسجيل الدخول');
@@ -140,13 +147,22 @@ export default function SignIn() {
             </motion.button>
           </form>
 
-          <div className="mt-8 text-center">
+          <div className="mt-8 text-center space-y-3">
             <p className="text-sm text-gray-600">
               تحتاج مساعدة؟{' '}
               <a href="mailto:support@wallstreetenglish.com" className="text-blue-600 hover:underline">
                 تواصل معنا
               </a>
             </p>
+            <div className="pt-3 border-t border-gray-200">
+              <button
+                onClick={() => router.push('/admin/auth/signin')}
+                className="text-xs text-gray-500 hover:text-blue-600 transition-colors flex items-center justify-center gap-1"
+              >
+                <span>دخول المدراء</span>
+                <span>←</span>
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>
