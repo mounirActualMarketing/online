@@ -1,7 +1,7 @@
 'use client';
 
-// fixed bad import
 import { useState, useEffect } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
@@ -59,7 +59,7 @@ interface UserData {
 }
 
 export default function AdminDashboard() {
-  const { data: session, status } = useState();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [users, setUsers] = useState<UserData[]>([]);
@@ -75,7 +75,7 @@ export default function AdminDashboard() {
     }
 
     if (status === 'authenticated') {
-      if (user?.role !== 'ADMIN' && user?.role !== 'SUPER_ADMIN') {
+      if (session?.user?.role !== 'ADMIN' && session?.user?.role !== 'SUPER_ADMIN') {
         router.push('/assessment');
         return;
       }
@@ -170,13 +170,13 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-gray-600">
                 <User className="w-5 h-5" />
-                <span>{user?.name}</span>
+                <span>{session?.user?.name}</span>
                 <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                  {user?.role === 'SUPER_ADMIN' ? 'مدير عام' : 'مدير'}
+                  {session?.user?.role === 'SUPER_ADMIN' ? 'مدير عام' : 'مدير'}
                 </span>
               </div>
               <button
-                onClick={() => router.push('/api/auth/signout')}
+                onClick={() => signOut({ callbackUrl: '/auth/signin' })}
                 className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors"
               >
                 <LogOut className="w-5 h-5" />
