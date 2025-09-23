@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
       hasFullName: !!body.fullName,
       hasEmail: !!body.email,
       hasPhone: !!body.phone,
-      amount: body.amount || 27,
+      amount: body.amount || 47,
       currency: body.currency || 'SAR'
     });
 
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
       fullName, 
       email, 
       phone, 
-      amount = 27,
+      amount = 47,
       currency = 'SAR',
       orderId 
     } = body;

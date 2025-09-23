@@ -39,11 +39,11 @@ export default function SignIn() {
         const response = await fetch('/api/auth/session');
         const session = await response.json();
         
-        if (session?.user?.role === 'ADMIN' || session?.user?.role === 'SUPER_ADMIN') {
-          router.push('/admin');
-        } else {
-          router.push('/assessment');
-        }
+             if (session?.user?.role === 'ADMIN' || session?.user?.role === 'SUPER_ADMIN') {
+               router.push('/admin');
+             } else {
+               router.push('/dashboard');
+             }
       }
     } catch (error) {
       setError('حدث خطأ أثناء تسجيل الدخول');

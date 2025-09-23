@@ -89,18 +89,18 @@ const OrderSummary = () => (
         </div>
         <div className="flex justify-between items-center mb-2">
           <span className="text-gray-600">الخصم (98%)</span>
-          <span className="text-lg font-bold text-green-500">-1573 ريال</span>
+          <span className="text-lg font-bold text-green-500">-1553 ريال</span>
         </div>
         <div className="flex justify-between items-center text-xl font-bold border-t pt-2">
           <span style={{ color: '#0e25ac' }}>المجموع</span>
-          <span style={{ color: '#e74c3c' }}>27 ريال</span>
+          <span style={{ color: '#e74c3c' }}>47 ريال</span>
         </div>
       </div>
       
       <div className="bg-green-50 p-3 rounded-lg">
         <div className="flex items-center gap-2 text-green-600">
           <Gift className="w-5 h-5" />
-          <span className="font-semibold">وفرت 1573 ريال!</span>
+          <span className="font-semibold">وفرت 1553 ريال!</span>
         </div>
       </div>
     </div>
@@ -505,7 +505,7 @@ export default function Payment() {
                   ) : (
                     <div className="flex items-center justify-center gap-2">
                       <Lock className="w-6 h-6" />
-                      <span>ادفع الآن - 27 ريال</span>
+                      <span>ادفع الآن - 47 ريال</span>
                     </div>
                   )}
                 </motion.button>

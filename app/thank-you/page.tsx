@@ -583,13 +583,13 @@ export default function ThankYou() {
                   </div>
                   <ArrowRight className="w-6 h-6 text-yellow-300" />
                 <div className="text-center">
-                    <div className="text-3xl lg:text-4xl font-bold text-yellow-300 drop-shadow-lg">37 ريال</div>
+                    <div className="text-3xl lg:text-4xl font-bold text-yellow-300 drop-shadow-lg">47 ريال</div>
                     <div className="text-xs text-yellow-300">🔥 اليوم فقط</div>
                   </div>
                 </div>
                 
                 <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-4 py-2 rounded-full text-sm font-bold text-center shadow-lg">
-                  خصم 98% - وفر 1463 ريال!
+                  خصم 97% - وفر 1453 ريال!
                 </div>
               </div>
               
@@ -627,7 +627,7 @@ export default function ThankYou() {
                     style={{ color: '#de1135' }}
                   >
                     <ShoppingCart className="w-5 h-5" />
-                    احجز مقعدك الآن - 37 ريال
+                    احجز مقعدك الآن - 47 ريال
                   </motion.button>
                 </Link>
                 
