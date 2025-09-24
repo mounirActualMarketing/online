@@ -288,7 +288,7 @@ export default function ThankYou() {
       </h1>
       
       <p className="text-xl text-gray-600 mb-6">
-        مرحباً بك في عائلة Wall Street English
+        مرحباً بك في عائلة Ansam
       </p>
       
       {transactionRef && (
@@ -542,9 +542,9 @@ export default function ThankYou() {
               {/* Logo */}
               <div className="flex justify-center mb-6">
                 <div className="w-32 h-12 relative">
-                  <Image 
-                    src="/logo.png" 
-                    alt="Wall Street English"
+            <Image
+              src="/ansam.png"
+              alt="Ansam"
                     fill
                     className="object-contain filter brightness-0 invert"
                     priority

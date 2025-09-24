@@ -12,7 +12,7 @@ const notoKufiArabic = Noto_Kufi_Arabic({
 });
 
 export const metadata: Metadata = {
-  title: "Wall Street English - تعلم الانجليزي من أي مكان",
+  title: "Ansam - تعلم الانجليزي من أي مكان",
   description: "احترف اللغة الإنجليزية مع أفضل المدرسين والطرق التفاعلية الحديثة",
 };
 

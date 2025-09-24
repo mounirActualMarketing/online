@@ -35,8 +35,8 @@ function ErrorContent() {
           <div className="flex items-center justify-center">
             <div className="w-48 h-16 relative">
               <Image 
-                src="/logo.png" 
-                alt="Wall Street English Logo"
+                src="/ansam.png" 
+                alt="Ansam Logo"
                 fill
                 className="object-contain"
                 priority

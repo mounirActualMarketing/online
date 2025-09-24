@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
       cart_id: cartId,
       cart_currency: 'SAR',
       cart_amount: amount,
-      cart_description: 'Wall Street English - تعلم الإنجليزية أونلاين',
+      cart_description: 'Ansam - تعلم الإنجليزية أونلاين',
       paypage_lang: 'ar',
       customer_details: {
         name: fullName,

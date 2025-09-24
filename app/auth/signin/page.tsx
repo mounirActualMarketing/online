@@ -65,9 +65,9 @@ export default function SignIn() {
           
           <div className="text-center mb-8">
             <div className="relative w-32 h-16 mx-auto mb-6">
-              <Image
-                src="/logo.png"
-                alt="Wall Street English"
+            <Image
+              src="/ansam.png"
+              alt="Ansam"
                 fill
                 className="object-contain"
               />
@@ -150,7 +150,7 @@ export default function SignIn() {
           <div className="mt-8 text-center space-y-3">
             <p className="text-sm text-gray-600">
               تحتاج مساعدة؟{' '}
-              <a href="mailto:support@wallstreetenglish.com" className="text-blue-600 hover:underline">
+              <a href="mailto:support@ansam.com" className="text-blue-600 hover:underline">
                 تواصل معنا
               </a>
             </p>

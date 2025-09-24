@@ -100,8 +100,8 @@ export default function AssessmentDashboard() {
             <div className="flex items-center gap-2 sm:gap-4">
               <div className="relative w-10 h-10 sm:w-12 sm:h-12">
                 <Image
-                  src="/logo.png"
-                  alt="Wall Street English"
+                  src="/ansam.png"
+                  alt="Ansam"
                   fill
                   className="object-contain"
                 />

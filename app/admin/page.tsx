@@ -155,8 +155,8 @@ export default function AdminDashboard() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="w-32 h-12 sm:w-48 sm:h-16 relative">
               <Image 
-                src="/logo.png" 
-                alt="Wall Street English Logo"
+                src="/ansam.png" 
+                alt="Ansam Logo"
                 fill
                 className="object-contain"
                 priority

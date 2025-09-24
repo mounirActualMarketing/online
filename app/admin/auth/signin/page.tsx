@@ -56,8 +56,8 @@ export default function AdminSignInPage() {
           </div>
           <div className="w-32 h-16 mx-auto mb-4 relative">
             <Image
-              src="/logo.png"
-              alt="Wall Street English"
+              src="/ansam.png"
+                  alt="Ansam"
               fill
               className="object-contain"
               priority

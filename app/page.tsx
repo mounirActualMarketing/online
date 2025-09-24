@@ -354,8 +354,8 @@ export default function Home() {
           <div className="flex items-center">
             <div className="w-48 h-16 relative">
               <Image 
-                src="/logo.png" 
-                alt="Wall Street English Logo"
+                src="/ansam.png" 
+                alt="Ansam Logo"
                 fill
                 className="object-contain"
                 priority
@@ -404,7 +404,7 @@ export default function Home() {
             >
         <Image
                 src="/hdrtv.webp" 
-                alt="تعلم الإنجليزية أونلاين مع Wall Street English"
+                alt="تعلم الإنجليزية أونلاين مع Ansam"
                 fill
                 className="object-contain"
           priority
@@ -1119,8 +1119,8 @@ export default function Home() {
             <div className="flex items-center justify-center mb-6">
               <div className="w-16 h-16 relative">
           <Image
-                  src="/logo.png" 
-                  alt="Wall Street English Logo"
+                  src="/ansam.png" 
+                  alt="Ansam Logo"
                   fill
                   className="object-contain"
                 />
@@ -1133,7 +1133,7 @@ export default function Home() {
               ))}
             </div>
             <p className="text-gray-400">
-              Copyright © 2025 Wall Street English - جميع الحقوق محفوظة
+              Copyright © 2025 Ansam - جميع الحقوق محفوظة
             </p>
           </div>
         </div>

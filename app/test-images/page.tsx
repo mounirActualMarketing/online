@@ -8,7 +8,7 @@ export default function TestImages() {
   const [imageLoaded, setImageLoaded] = useState<Record<string, boolean>>({});
 
   const images = [
-    { src: '/logo.png', name: 'Logo' },
+    { src: '/ansam.png', name: 'Ansam Logo' },
     { src: '/Ask-Fayez-1.png', name: 'Fayez' },
     { src: '/Ask-Haifa-1.png', name: 'Haifa' },
     { src: '/hdrtv.webp', name: 'Hero TV' },
