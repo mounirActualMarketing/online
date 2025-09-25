@@ -41,22 +41,24 @@ export default function AnasLandingPage() {
         .hero-section {
           height: 100vh;
           background-attachment: scroll;
-          background-size: cover;
+          background-size: contain;
           background-position: center center;
           margin-left: 0;
           margin-right: 0;
           width: 100vw;
+          background-color: #f8f9fa;
         }
       }
       
       @media (max-width: 480px) {
         .hero-section {
           height: 100vh;
-          background-size: cover;
+          background-size: contain;
           background-position: center center;
           width: 100vw;
           margin: 0;
           padding: 0;
+          background-color: #f8f9fa;
         }
       }
       .cta-bg {
