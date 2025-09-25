@@ -39,7 +39,8 @@ export default function AnasLandingPage() {
       
       @media (max-width: 768px) {
         .hero-section {
-          height: 100vh;
+          height: auto;
+          min-height: 60vh;
           background-attachment: scroll;
           background-size: contain;
           background-position: center center;
@@ -47,17 +48,19 @@ export default function AnasLandingPage() {
           margin-right: 0;
           width: 100vw;
           background-color: #f8f9fa;
+          padding: 2rem 0;
         }
       }
       
       @media (max-width: 480px) {
         .hero-section {
-          height: 100vh;
+          height: auto;
+          min-height: 50vh;
           background-size: contain;
           background-position: center center;
           width: 100vw;
           margin: 0;
-          padding: 0;
+          padding: 1rem 0;
           background-color: #f8f9fa;
         }
       }
