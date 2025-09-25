@@ -22,6 +22,11 @@ export default function AnasLandingPage() {
         box-sizing: border-box;
       }
       
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      
       .hero-section {
         width: 100vw;
         height: 100vh;
@@ -38,30 +43,40 @@ export default function AnasLandingPage() {
       }
       
       @media (max-width: 768px) {
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        
         .hero-section {
           height: auto;
-          min-height: 60vh;
+          min-height: 70vh;
           background-attachment: scroll;
           background-size: contain;
           background-position: center center;
-          margin-left: 0;
-          margin-right: 0;
+          margin: 0;
           width: 100vw;
           background-color: #f8f9fa;
-          padding: 2rem 0;
+          padding: 0;
+          position: relative;
+          left: 0;
+          right: 0;
         }
       }
       
       @media (max-width: 480px) {
         .hero-section {
           height: auto;
-          min-height: 50vh;
+          min-height: 60vh;
           background-size: contain;
           background-position: center center;
           width: 100vw;
           margin: 0;
-          padding: 1rem 0;
+          padding: 0;
           background-color: #f8f9fa;
+          position: relative;
+          left: 0;
+          right: 0;
         }
       }
       .cta-bg {
