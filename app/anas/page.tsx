@@ -22,9 +22,10 @@ export default function AnasLandingPage() {
         box-sizing: border-box;
       }
       
-      body {
-        margin: 0;
-        padding: 0;
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden;
       }
       
       .hero-section {
@@ -43,40 +44,48 @@ export default function AnasLandingPage() {
       }
       
       @media (max-width: 768px) {
-        body {
-          margin: 0;
-          padding: 0;
+        html, body {
+          margin: 0 !important;
+          padding: 0 !important;
         }
         
         .hero-section {
-          height: auto;
-          min-height: 70vh;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
           background-attachment: scroll;
           background-size: contain;
           background-position: center center;
-          margin: 0;
-          width: 100vw;
           background-color: #f8f9fa;
-          padding: 0;
-          position: relative;
-          left: 0;
-          right: 0;
+          margin: 0 !important;
+          padding: 0 !important;
+          z-index: 1;
+        }
+        
+        .hero-section + section {
+          margin-top: 100vh;
         }
       }
       
       @media (max-width: 480px) {
         .hero-section {
-          height: auto;
-          min-height: 60vh;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
           background-size: contain;
           background-position: center center;
-          width: 100vw;
-          margin: 0;
-          padding: 0;
           background-color: #f8f9fa;
-          position: relative;
-          left: 0;
-          right: 0;
+          margin: 0 !important;
+          padding: 0 !important;
+          z-index: 1;
+        }
+        
+        .hero-section + section {
+          margin-top: 100vh;
         }
       }
       .cta-bg {
