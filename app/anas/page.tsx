@@ -283,12 +283,15 @@ export default function AnasLandingPage() {
           <p className="text-xl md:text-2xl text-white mb-8">
             انضم إلى أكثر من 2 مليون متعلم حول العالم
           </p>
-          <button className="bg-[#ed1e40] text-white px-10 py-5 rounded-xl text-xl font-bold hover:bg-[#d11832] transform hover:scale-105 transition duration-300 shadow-2xl">
-            ابدأ التعلم مجاناً
-          </button>
-          <p className="text-white mt-6 text-lg">
-            لا تحتاج لبطاقة ائتمان • ابدأ فوراً
-          </p>
+          <a 
+            href="https://wallstreetenglish.edu.sa/institutes/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-block bg-[#ed1e40] text-white px-10 py-5 rounded-xl text-xl font-bold hover:bg-[#d11832] transform hover:scale-105 transition duration-300 shadow-2xl"
+          >
+            ابدأ التعلم الآن
+          </a>
+          
         </div>
       </section>
 
