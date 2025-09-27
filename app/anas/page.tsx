@@ -22,12 +22,6 @@ export default function AnasLandingPage() {
         box-sizing: border-box;
       }
       
-      html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow-x: hidden;
-      }
-      
       .hero-section {
         width: 100vw;
         height: 100vh;
@@ -43,49 +37,30 @@ export default function AnasLandingPage() {
         justify-content: center;
       }
       
-      @media (max-width: 768px) {
-        html, body {
-          margin: 0 !important;
-          padding: 0 !important;
-        }
-        
-        .hero-section {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background-attachment: scroll;
-          background-size: contain;
-          background-position: center center;
-          background-color: #f8f9fa;
-          margin: 0 !important;
-          padding: 0 !important;
-          z-index: 1;
-        }
-        
-        .hero-section + section {
-          margin-top: 100vh;
-        }
+      .hero-mobile-image {
+        display: none;
       }
       
-      @media (max-width: 480px) {
+      @media (max-width: 768px) {
         .hero-section {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background-size: contain;
-          background-position: center center;
-          background-color: #f8f9fa;
-          margin: 0 !important;
-          padding: 0 !important;
-          z-index: 1;
+          display: none;
         }
         
-        .hero-section + section {
-          margin-top: 100vh;
+        .hero-mobile-image {
+          display: block;
+          width: 100vw;
+          height: auto;
+          margin: 0;
+          padding: 0;
+          object-fit: cover;
+          object-position: center;
+        }
+        
+        .hero-mobile-container {
+          margin: 0;
+          padding: 0;
+          width: 100vw;
+          margin-bottom: 6px;
         }
       }
       .cta-bg {
@@ -118,6 +93,15 @@ export default function AnasLandingPage() {
       <section className="hero-section">
         {/* Text removed since the background image contains the text */}
       </section>
+
+      {/* Mobile Hero Image */}
+      <div className="hero-mobile-container">
+        <img 
+          src="/anas/anas.jpg" 
+          alt="Anas Hero" 
+          className="hero-mobile-image"
+        />
+      </div>
 
       {/* YouTube Video Section */}
       <section className="py-16 bg-gray-50">
