@@ -23,25 +23,43 @@ interface AdminNotificationData {
 
 export async function sendEmail(data: EmailData) {
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    const response = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'api-key': process.env.BREVO_API_KEY!,
       },
       body: JSON.stringify({
-        sender: {
-          name: process.env.FROM_NAME || 'Wall Street English',
-          email: process.env.FROM_EMAIL || 'noreply@wallstreetenglish.com',
-        },
-        to: [
-          {
-            email: data.to,
+        key: process.env.MANDRILL_API_KEY || 'md-iOhVah4JhDQolGOL_noqig',
+        message: {
+          html: data.html,
+          text: data.text || data.html.replace(/<[^>]*>/g, ''),
+          subject: data.subject,
+          from_email: process.env.FROM_EMAIL || 'noreply@wallstreetenglish.com',
+          from_name: process.env.FROM_NAME || 'Wall Street English',
+          to: [
+            {
+              email: data.to,
+              type: 'to'
+            }
+          ],
+          headers: {
+            'Reply-To': process.env.FROM_EMAIL || 'noreply@wallstreetenglish.com'
           },
-        ],
-        subject: data.subject,
-        htmlContent: data.html,
-        textContent: data.text || data.html.replace(/<[^>]*>/g, ''),
+          important: false,
+          track_opens: true,
+          track_clicks: true,
+          auto_text: true,
+          auto_html: false,
+          inline_css: true,
+          url_strip_qs: false,
+          preserve_recipients: false,
+          view_content_link: false,
+          tracking_domain: null,
+          signing_domain: null,
+          return_path_domain: null
+        },
+        async: false,
+        ip_pool: 'Main Pool'
       }),
     })
 
@@ -51,10 +69,21 @@ export async function sendEmail(data: EmailData) {
     }
 
     const result = await response.json()
-    console.log('Email sent successfully:', result)
+    
+    // Check if Mandrill returned an error
+    if (Array.isArray(result) && result.length > 0) {
+      const emailResult = result[0]
+      if (emailResult.status === 'rejected' || emailResult.status === 'invalid') {
+        throw new Error(`Email rejected: ${emailResult.reject_reason}`)
+      }
+      console.log('Email sent successfully via Mandrill:', emailResult)
+      return emailResult
+    }
+    
+    console.log('Email sent successfully via Mandrill:', result)
     return result
   } catch (error) {
-    console.error('Email send error:', error)
+    console.error('Mandrill email send error:', error)
     throw error
   }
 }
