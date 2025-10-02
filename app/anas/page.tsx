@@ -148,10 +148,10 @@ export default function AnasLandingPage() {
                 </div>
               </div>
               <div className="text-white text-2xl md:text-3xl font-semibold mt-4">
-                من مستوى 1 إلى مستوى 20
+                من مستوى 1 إلى مستوى 8
               </div>
               <p className="text-white/80 text-lg mt-4">
-                رحلة تعليمية متكاملة تأخذك من البداية إلى الاحتراف
+              رحلة تعليمية متكاملة للوصول إلى مستوى الطلاقة
               </p>
             </div>
           </div>
