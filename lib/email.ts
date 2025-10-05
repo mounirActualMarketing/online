@@ -29,12 +29,12 @@ export async function sendEmail(data: EmailData) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        key: process.env.MANDRILL_API_KEY || 'md-iOhVah4JhDQolGOL_noqig',
+        key: process.env.MANDRILL_API_KEY || 'md-KAry1hXAlA2q56TVRQimTA',
         message: {
           html: data.html,
           text: data.text || data.html.replace(/<[^>]*>/g, ''),
           subject: data.subject,
-          from_email: process.env.FROM_EMAIL || 'noreply@wallstreetenglish.com',
+          from_email: process.env.FROM_EMAIL || 'info@wallstreedenglish.edu.sa',
           from_name: process.env.FROM_NAME || 'Wall Street English',
           to: [
             {
@@ -43,7 +43,7 @@ export async function sendEmail(data: EmailData) {
             }
           ],
           headers: {
-            'Reply-To': process.env.FROM_EMAIL || 'noreply@wallstreetenglish.com'
+            'Reply-To': process.env.FROM_EMAIL || 'info@wallstreedenglish.edu.sa'
           },
           important: false,
           track_opens: true,
