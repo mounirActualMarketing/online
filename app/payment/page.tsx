@@ -204,7 +204,7 @@ export default function Payment() {
       // Track Facebook event
       if (typeof window !== 'undefined' && (window as any).fbq) {
         (window as any).fbq('track', 'InitiateCheckout', {
-          value: 27,
+          value: 47,
           currency: 'SAR'
         });
       }
@@ -219,7 +219,7 @@ export default function Payment() {
           fullName: formData.fullName,
           email: formData.email,
           phone: formData.phone,
-          amount: 27,
+          amount: 47,
           currency: 'SAR',
         }),
       });
@@ -251,7 +251,7 @@ export default function Payment() {
           // Payment approved
           if (typeof window !== 'undefined' && (window as any).fbq) {
             (window as any).fbq('track', 'Purchase', {
-              value: 27,
+              value: 47,
               currency: 'SAR'
             });
           }

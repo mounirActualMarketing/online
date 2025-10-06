@@ -208,7 +208,7 @@ export default function ThankYou() {
         // Track successful purchase
         if ((window as any).fbq) {
           (window as any).fbq('track', 'Purchase', {
-            value: 27,
+            value: 47,
             currency: 'SAR',
             content_ids: ['wse-online-course'],
             content_type: 'product'
@@ -217,7 +217,7 @@ export default function ThankYou() {
         
         if ((window as any).snaptr) {
           (window as any).snaptr('track', 'PURCHASE', {
-            price: 27,
+            price: 47,
             currency: 'SAR'
           });
         }
@@ -519,9 +519,22 @@ export default function ThankYou() {
               </h3>
               <CompactBenefits />
               
-              <div className="bg-gradient-to-r from-red-50 to-blue-50 rounded-xl p-4 text-center border border-gray-100">
-                <div className="text-sm text-gray-600 mb-1">💸 السعر الأصلي</div>
-                <div className="text-2xl font-bold" style={{ color: '#003359' }}>1,500 ريال</div>
+              <div className="bg-gradient-to-r from-red-50 to-blue-50 rounded-xl p-4 border border-gray-100">
+                <div className="flex items-center justify-center gap-4 mb-2">
+                <div className="text-center">
+                    <div className="text-2xl font-bold text-red-600">47 ريال</div>
+                    <div className="text-xs text-red-600">🔥 اليوم فقط</div>
+                  </div>
+                  <ArrowRight className="w-6 h-6 text-blue-500" />
+                  <div className="text-center">
+                    <div className="text-lg font-bold line-through text-gray-500">1500 ريال</div>
+                    <div className="text-xs text-gray-600">السعر الأصلي</div>
+                  </div>
+                   
+                </div>
+                <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-3 py-1 rounded-full text-sm font-bold text-center">
+                  خصم 97% - وفر 1453 ريال!
+                </div>
               </div>
             </div>
           </motion.div>
@@ -577,15 +590,17 @@ export default function ThankYou() {
               {/* Price Section */}
               <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-white/20">
                 <div className="flex items-center justify-center gap-4 mb-4">
-                  <div className="text-center">
-                    <div className="text-lg font-bold line-through text-red-200 opacity-75">1500 ريال</div>
-                    <div className="text-xs text-red-200 opacity-75">السعر الأصلي</div>
-                  </div>
-                  <ArrowRight className="w-6 h-6 text-yellow-300" />
                 <div className="text-center">
                     <div className="text-3xl lg:text-4xl font-bold text-yellow-300 drop-shadow-lg">47 ريال</div>
                     <div className="text-xs text-yellow-300">🔥 اليوم فقط</div>
                   </div>
+                  <ArrowRight className="w-6 h-6 text-yellow-300" />
+                  <div className="text-center">
+                    <div className="text-lg font-bold line-through text-red-200 opacity-75">1500 ريال</div>
+                    <div className="text-xs text-red-200 opacity-75">السعر الأصلي</div>
+                  </div>
+                 
+                
                 </div>
                 
                 <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-4 py-2 rounded-full text-sm font-bold text-center shadow-lg">
