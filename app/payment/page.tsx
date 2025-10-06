@@ -434,14 +434,35 @@ export default function Payment() {
                       </div>
                       
                       <div className="grid grid-cols-3 gap-4 mb-4">
-                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
-                          <div className="text-blue-600 font-bold text-lg">VISA</div>
+                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center flex items-center justify-center">
+                          <div className="relative w-16 h-10">
+                            <Image 
+                              src="/Visa_Logo.png" 
+                              alt="VISA"
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
                         </div>
-                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
-                          <div className="text-red-600 font-bold text-lg">MasterCard</div>
+                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center flex items-center justify-center">
+                          <div className="relative w-16 h-10">
+                            <Image 
+                              src="/MasterCard_Logo.svg.png" 
+                              alt="MasterCard"
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
                         </div>
-                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
-                          <div className="text-green-600 font-bold text-lg">mada</div>
+                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center flex items-center justify-center">
+                          <div className="relative w-16 h-10">
+                            <Image 
+                              src="/Mada_Logo.svg.png" 
+                              alt="mada"
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
                         </div>
                       </div>
 
