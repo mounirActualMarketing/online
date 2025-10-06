@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Handle POST requests from ClickPay to /thank-you
- * ClickPay sends POST instead of GET redirect, so we redirect to upsell page
+ * ClickPay sends POST instead of GET redirect, so we need to handle it
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log('POST to /thank-you received from ClickPay');
+    console.log('POST to /thank-you received');
     
     // Try to get body data
     let bodyData: any = {};
@@ -22,20 +22,20 @@ export async function POST(request: NextRequest) {
     console.log('Body data:', bodyData);
     console.log('Search params:', Object.fromEntries(searchParams));
     
-    // Extract payment information
+    // Extract payment information from either body or search params
     const payment = searchParams.get('payment') || bodyData.payment || 'success';
     const ref = searchParams.get('ref') || bodyData.tran_ref || bodyData.ref;
     const tranRef = searchParams.get('tran_ref') || bodyData.tran_ref;
     const cartId = searchParams.get('cart_id') || bodyData.cart_id;
     
-    // Build redirect URL to offer page with payment parameters
+    // Build redirect URL with query parameters
     const redirectParams = new URLSearchParams();
     redirectParams.set('payment', payment);
     if (ref) redirectParams.set('ref', ref);
     if (tranRef) redirectParams.set('tran_ref', tranRef);
     if (cartId) redirectParams.set('cart_id', cartId);
     
-    const redirectUrl = new URL(`/offer?${redirectParams.toString()}`, request.url);
+    const redirectUrl = new URL(`/thank-you?${redirectParams.toString()}`, request.url);
     
     console.log('Redirecting to:', redirectUrl.toString());
     
@@ -45,24 +45,11 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error handling POST to /thank-you:', error);
     
-    // If anything fails, redirect to offer with success
+    // If anything fails, redirect to thank-you with success
     return NextResponse.redirect(
-      new URL('/offer?payment=success', request.url),
+      new URL('/thank-you?payment=success', request.url),
       { status: 303 }
     );
   }
-}
-
-/**
- * Handle GET requests to /thank-you
- * Redirect to offer page with payment parameters
- */
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const redirectUrl = new URL(`/offer?${searchParams.toString()}`, request.url);
-  
-  console.log('GET to /thank-you, redirecting to:', redirectUrl.toString());
-  
-  return NextResponse.redirect(redirectUrl, { status: 303 });
 }
 
