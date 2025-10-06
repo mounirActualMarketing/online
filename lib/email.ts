@@ -23,43 +23,30 @@ interface AdminNotificationData {
 
 export async function sendEmail(data: EmailData) {
   try {
-    const response = await fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'api-key': process.env.BREVO_API_KEY || '',
       },
       body: JSON.stringify({
-        key: process.env.MANDRILL_API_KEY || 'md-KAry1hXAlA2q56TVRQimTA',
-        message: {
-          html: data.html,
-          text: data.text || data.html.replace(/<[^>]*>/g, ''),
-          subject: data.subject,
-          from_email: process.env.FROM_EMAIL || 'info@wallstreedenglish.edu.sa',
-          from_name: process.env.FROM_NAME || 'Wall Street English',
-          to: [
-            {
-              email: data.to,
-              type: 'to'
-            }
-          ],
-          headers: {
-            'Reply-To': process.env.FROM_EMAIL || 'info@wallstreedenglish.edu.sa'
-          },
-          important: false,
-          track_opens: true,
-          track_clicks: true,
-          auto_text: true,
-          auto_html: false,
-          inline_css: true,
-          url_strip_qs: false,
-          preserve_recipients: false,
-          view_content_link: false,
-          tracking_domain: null,
-          signing_domain: null,
-          return_path_domain: null
+        sender: {
+          name: process.env.FROM_NAME || 'Wall Street English',
+          email: process.env.FROM_EMAIL || 'info@wallstreedenglish.edu.sa'
         },
-        async: false,
-        ip_pool: 'Main Pool'
+        to: [
+          {
+            email: data.to,
+            name: data.to
+          }
+        ],
+        subject: data.subject,
+        htmlContent: data.html,
+        textContent: data.text || data.html.replace(/<[^>]*>/g, ''),
+        replyTo: {
+          email: process.env.FROM_EMAIL || 'info@wallstreedenglish.edu.sa',
+          name: process.env.FROM_NAME || 'Wall Street English'
+        }
       }),
     })
 
@@ -69,21 +56,10 @@ export async function sendEmail(data: EmailData) {
     }
 
     const result = await response.json()
-    
-    // Check if Mandrill returned an error
-    if (Array.isArray(result) && result.length > 0) {
-      const emailResult = result[0]
-      if (emailResult.status === 'rejected' || emailResult.status === 'invalid') {
-        throw new Error(`Email rejected: ${emailResult.reject_reason}`)
-      }
-      console.log('Email sent successfully via Mandrill:', emailResult)
-      return emailResult
-    }
-    
-    console.log('Email sent successfully via Mandrill:', result)
+    console.log('Email sent successfully via Brevo:', result)
     return result
   } catch (error) {
-    console.error('Mandrill email send error:', error)
+    console.error('Brevo email send error:', error)
     throw error
   }
 }
