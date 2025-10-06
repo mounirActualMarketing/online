@@ -134,24 +134,36 @@ export async function POST(request: NextRequest) {
         });
 
         // Send welcome email with login credentials
-        await sendWelcomeEmail({
-          customerName: customer_details.name,
-          email: customer_details.email,
-          password: randomPassword,
-          loginUrl: `${process.env.APP_URL}/auth/signin`,
-          assessmentUrl: `${process.env.APP_URL}/assessment`,
-        });
+        try {
+          await sendWelcomeEmail({
+            customerName: customer_details.name,
+            email: customer_details.email,
+            password: randomPassword,
+            loginUrl: `${process.env.APP_URL}/auth/signin`,
+            assessmentUrl: `${process.env.APP_URL}/assessment`,
+          });
+          console.log('✅ Welcome email sent successfully');
+        } catch (emailError) {
+          console.error('⚠️ Failed to send welcome email:', emailError);
+          // Continue even if email fails
+        }
 
         // Send admin notification
-        await sendAdminNotification({
-          customerName: customer_details.name,
-          email: customer_details.email,
-          phone: customer_details.phone,
-          amount: parseFloat(cart_amount),
-          transactionRef: tran_ref,
-        });
+        try {
+          await sendAdminNotification({
+            customerName: customer_details.name,
+            email: customer_details.email,
+            phone: customer_details.phone,
+            amount: parseFloat(cart_amount),
+            transactionRef: tran_ref,
+          });
+          console.log('✅ Admin notification sent successfully');
+        } catch (emailError) {
+          console.error('⚠️ Failed to send admin notification:', emailError);
+          // Continue even if email fails
+        }
 
-        console.log('✅ User created, emails sent successfully');
+        console.log('✅ User created successfully (emails may have failed)');
 
       } catch (error) {
         console.error('❌ Error processing successful payment:', error);
