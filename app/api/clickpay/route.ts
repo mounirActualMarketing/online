@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
         country: 'SA',
       },
       callback: `${request.nextUrl.origin}/api/clickpay/callback`,
-      return: `${request.nextUrl.origin}/thank-you`,
+      return: `${request.nextUrl.origin}/thank-you?payment=success`,
       hide_shipping: true,
       framed: false,
     };
