@@ -185,13 +185,25 @@ export async function POST(request: NextRequest) {
       // 3. Update order status to failed
     }
 
+    // If this is a user-facing request (has query params), redirect to thank-you page
+    const isUserFacing = request.nextUrl.searchParams.size > 0;
+    
+    if (isUserFacing && isApproved) {
+      // Redirect user to thank-you page with success
+      const redirectUrl = new URL('/thank-you', request.url);
+      redirectUrl.searchParams.set('payment', 'success');
+      redirectUrl.searchParams.set('ref', tran_ref);
+      return NextResponse.redirect(redirectUrl, { status: 303 });
+    }
+    
     // Always return 200/201 to acknowledge receipt of callback
     return NextResponse.json(
       { 
         status: 'received',
         cart_id: cart_id,
         tran_ref: tran_ref,
-        processed: true 
+        processed: true,
+        isApproved: isApproved
       },
       { status: 200 }
     );
