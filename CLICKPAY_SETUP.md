@@ -64,7 +64,7 @@ CLICKPAY_SERVER_KEY=your_server_key_here
   "fullName": "أحمد محمد",
   "email": "ahmed@example.com", 
   "phone": "0501234567",
-  "amount": 27,
+  "amount": 47,
   "currency": "SAR"
 }
 ```
