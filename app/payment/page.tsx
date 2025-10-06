@@ -412,25 +412,6 @@ export default function Payment() {
                   </div>
                 </div>
 
-                {/* Payment Method Selection */}
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4" style={{ color: '#0e25ac' }}>
-                    طريقة الدفع
-                  </h2>
-                  <div className="space-y-3">
-                    {paymentMethods.map((method) => (
-                      <PaymentMethod
-                        key={method.id}
-                        icon={method.icon}
-                        title={method.title}
-                        description={method.description}
-                        selected={selectedPayment === method.id}
-                        onClick={() => setSelectedPayment(method.id)}
-                      />
-                    ))}
-                  </div>
-                </div>
-
                 {/* Credit Card Info */}
                 <motion.div 
                   initial={{ opacity: 0, height: 0 }}
