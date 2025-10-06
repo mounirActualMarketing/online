@@ -317,22 +317,57 @@ export default function ThankYou() {
       
       <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-xl">
         <h3 className="text-2xl font-bold mb-4" style={{ color: '#0e25ac' }}>
-          ماذا بعد؟
+          🎓 معلومات الدخول
         </h3>
-        <div className="space-y-4 text-right">
-          <div className="flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-            <span>سيتم التواصل معك خلال 24 ساعة</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-            <span>ستحصل على رابط الوصول للمنصة</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-            <span>سيتم تحديد موعد الجلسة التقييمية</span>
+        <div className="bg-white p-6 rounded-lg shadow-md mb-4 text-right">
+          <div className="space-y-3">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">📧 البريد الإلكتروني:</p>
+              <p className="font-bold text-gray-800 font-mono bg-gray-100 p-2 rounded">
+                تحقق من بريدك الإلكتروني
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1">🔑 كلمة المرور:</p>
+              <p className="font-bold text-gray-800 bg-yellow-100 p-2 rounded">
+                تم إرسالها إلى بريدك الإلكتروني
+              </p>
+            </div>
           </div>
         </div>
+        
+        <div className="space-y-3 mb-4">
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <span>تم إنشاء حسابك بنجاح</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <span>تحقق من بريدك الإلكتروني للحصول على كلمة المرور</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <span>ابدأ اختبار تحديد المستوى الآن</span>
+          </div>
+        </div>
+        
+        <div className="bg-yellow-50 border-2 border-yellow-200 p-4 rounded-lg">
+          <p className="text-sm text-yellow-800 font-semibold">
+            ⚠️ هام: إذا لم تستلم البريد الإلكتروني خلال 5 دقائق، تحقق من مجلد الرسائل غير المرغوب فيها (Spam)
+          </p>
+        </div>
+      </div>
+      
+      <div className="flex gap-4 justify-center">
+        <Link href={`${process.env.NEXT_PUBLIC_APP_URL || ''}/auth/signin`}>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            🚀 ابدأ الآن - تسجيل الدخول
+          </motion.button>
+        </Link>
       </div>
       
       <Link href="/">
