@@ -696,17 +696,6 @@ export default function ThankYou() {
                     احجز مقعدك الآن - 47 ريال
                   </motion.button>
                 </Link>
-                
-                <Link href="/payment">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full border-2 border-white text-white py-3 px-6 rounded-xl font-semibold hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    <Zap className="w-5 h-5" />
-                    دفع سريع وآمن
-                  </motion.button>
-                </Link>
             </div>
             
               {/* Trust Badges */}
