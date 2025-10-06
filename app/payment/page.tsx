@@ -276,7 +276,7 @@ export default function Payment() {
       id: 'credit-card',
       icon: <CreditCard className="w-6 h-6" />,
       title: 'بطاقة ائتمانية',
-      description: 'Visa, MasterCard, American Express, mada'
+      description: 'Visa, MasterCard, mada'
     }
   ];
 
@@ -452,15 +452,12 @@ export default function Payment() {
                         </div>
                       </div>
                       
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                      <div className="grid grid-cols-3 gap-4 mb-4">
                         <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
                           <div className="text-blue-600 font-bold text-lg">VISA</div>
                         </div>
                         <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
                           <div className="text-red-600 font-bold text-lg">MasterCard</div>
-                        </div>
-                        <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
-                          <div className="text-blue-800 font-bold text-sm">American Express</div>
                         </div>
                         <div className="bg-white p-3 rounded-lg shadow-sm border text-center">
                           <div className="text-green-600 font-bold text-lg">mada</div>
