@@ -237,8 +237,8 @@ export default function ThankYou() {
         }
       }
       
-      // If we have transaction details, verify payment status
-      if ((tranRef || cartId) && payment !== 'failed') {
+      // If we have transaction details and payment is not already success, verify payment status
+      if ((tranRef || cartId) && payment !== 'failed' && payment !== 'success') {
         verifyPaymentStatus(tranRef, cartId);
       }
     }
@@ -246,6 +246,8 @@ export default function ThankYou() {
 
   const verifyPaymentStatus = async (tranRef: string | null, cartId: string | null) => {
     try {
+      console.log('Verifying payment status:', { tranRef, cartId });
+      
       const response = await fetch('/api/clickpay/verify', {
         method: 'POST',
         headers: {
@@ -257,7 +259,15 @@ export default function ThankYou() {
         }),
       });
 
+      console.log('Verify response status:', response.status);
+      
+      if (!response.ok) {
+        console.error('Verify response not ok:', response.status, response.statusText);
+        return;
+      }
+
       const result = await response.json();
+      console.log('Verify result:', result);
       
       if (result.success && result.isApproved) {
         setPaymentStatus('success');
