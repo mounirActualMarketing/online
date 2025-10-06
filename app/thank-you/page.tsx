@@ -195,11 +195,17 @@ export default function ThankYou() {
     
     // Check URL parameters for payment status
     if (typeof window !== 'undefined') {
+      console.log('Thank you page loaded');
+      console.log('Full URL:', window.location.href);
+      console.log('Search params:', window.location.search);
+      
       const urlParams = new URLSearchParams(window.location.search);
       const payment = urlParams.get('payment');
       const ref = urlParams.get('ref');
       const tranRef = urlParams.get('tran_ref');
       const cartId = urlParams.get('cart_id');
+      
+      console.log('Payment params:', { payment, ref, tranRef, cartId });
       
       if (payment === 'success') {
         setPaymentStatus('success');
