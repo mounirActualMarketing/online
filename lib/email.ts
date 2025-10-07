@@ -23,31 +23,22 @@ interface AdminNotificationData {
 
 export async function sendEmail(data: EmailData) {
   try {
-    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    const response = await fetch('https://api.elasticemail.com/v2/email/send', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'api-key': process.env.BREVO_API_KEY || '',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify({
-        sender: {
-          name: process.env.FROM_NAME || 'Wall Street English',
-          email: process.env.FROM_EMAIL || 'info@wallstreedenglish.edu.sa'
-        },
-        to: [
-          {
-            email: data.to,
-            name: data.to
-          }
-        ],
+      body: new URLSearchParams({
+        apikey: process.env.ELASTIC_EMAIL_API_KEY || '',
+        from: process.env.FROM_EMAIL || 'info@wallstreetenglish.edu.sa',
+        fromName: process.env.FROM_NAME || 'Wall Street English',
+        to: data.to,
         subject: data.subject,
-        htmlContent: data.html,
-        textContent: data.text || data.html.replace(/<[^>]*>/g, ''),
-        replyTo: {
-          email: process.env.FROM_EMAIL || 'info@wallstreedenglish.edu.sa',
-          name: process.env.FROM_NAME || 'Wall Street English'
-        }
-      }),
+        bodyHtml: data.html,
+        bodyText: data.text || data.html.replace(/<[^>]*>/g, ''),
+        replyTo: process.env.FROM_EMAIL || 'info@wallstreetenglish.edu.sa',
+        replyToName: process.env.FROM_NAME || 'Wall Street English'
+      }).toString(),
     })
 
     if (!response.ok) {
@@ -56,10 +47,10 @@ export async function sendEmail(data: EmailData) {
     }
 
     const result = await response.json()
-    console.log('Email sent successfully via Brevo:', result)
+    console.log('Email sent successfully via Elastic Email:', result)
     return result
   } catch (error) {
-    console.error('Brevo email send error:', error)
+    console.error('Elastic Email send error:', error)
     throw error
   }
 }
