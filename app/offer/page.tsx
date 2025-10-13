@@ -106,6 +106,7 @@ const CountdownTimer = ({ initialTime = 7200 }: { initialTime?: number }) => {
 const CompactBenefits = () => {
   const benefits = [
     { icon: <Gift className="w-4 h-4" />, title: "رصيد فوري 500 ريال", value: "استخدمه على أي دورة" },
+    { icon: <Gift className="w-4 h-4" />, title: "استفد من أكثر من 5500 دورة تدريبية", value: "تعلم في أي وقت و من أي مكان" },
     { icon: <Shield className="w-4 h-4" />, title: "حقيبة أدوات الطلاقة (PDF)", value: "50 عبارة + خارطة طريق" },
     { icon: <Globe className="w-4 h-4" />, title: "اختبار تقييم الطلاقة", value: "خطة تعلم مخصصة" },
     { icon: <MessageCircle className="w-4 h-4" />, title: "جلسة حصرية 1:1", value: "بناء الثقة في التحدث" }
