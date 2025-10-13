@@ -14,7 +14,9 @@ import {
   Check,
   Star,
   Award,
-  Phone
+  Phone,
+  ExternalLink,
+  GraduationCap
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -118,7 +120,7 @@ export default function UserDashboard() {
         </motion.div>
 
         {/* Benefits Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-6xl mx-auto">
           
           {/* Instant Credit */}
           <motion.div
@@ -247,6 +249,38 @@ export default function UserDashboard() {
               </motion.button>
             )}
           </motion.div>
+
+          {/* Alison.com Free Courses */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <GraduationCap className="w-6 h-6" />
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold">5500+</div>
+                <div className="text-blue-100 text-sm">دورة مجانية</div>
+              </div>
+            </div>
+            <h3 className="text-xl font-bold mb-2">دورات Alison المجانية</h3>
+            <p className="text-blue-100 mb-4 text-sm">45 مليون متعلم حول العالم</p>
+            
+            <motion.a
+              href="https://alison.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full bg-white text-blue-600 py-3 px-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+            >
+              <ExternalLink className="w-5 h-5" />
+              ابدأ التعلم المجاني
+            </motion.a>
+          </motion.div>
         </div>
 
         {/* Additional Info */}
@@ -276,6 +310,10 @@ export default function UserDashboard() {
             <span className="flex items-center gap-1">
               <Phone className="w-4 h-4 text-red-500" />
               جلسة 1:1
+            </span>
+            <span className="flex items-center gap-1">
+              <GraduationCap className="w-4 h-4 text-blue-500" />
+              دورات مجانية
             </span>
           </div>
         </motion.div>

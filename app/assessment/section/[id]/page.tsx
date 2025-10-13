@@ -365,8 +365,9 @@ export default function SectionPage() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   className="mt-4 p-4 bg-gray-50 rounded-lg"
+                  dir="ltr"
                 >
-                  <pre className="whitespace-pre-wrap text-sm text-gray-700 font-sans">
+                  <pre className="whitespace-pre-wrap text-sm text-gray-700 font-sans text-left">
                     {section.content}
                   </pre>
                 </motion.div>
@@ -426,8 +427,8 @@ export default function SectionPage() {
 
             {/* Activity Content */}
             <div className="mb-6">
-              <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                <pre className="whitespace-pre-wrap text-gray-700 font-sans">
+              <div className="bg-blue-50 p-4 rounded-lg mb-4" dir="ltr">
+                <pre className="whitespace-pre-wrap text-gray-700 font-sans text-left">
                   {currentActivity.content}
                 </pre>
               </div>
