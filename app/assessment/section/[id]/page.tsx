@@ -491,51 +491,54 @@ export default function SectionPage() {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3 order-2 sm:order-1">
+              <div className="flex items-center gap-3 order-2 sm:order-1" dir="ltr">
                 <button
                   onClick={previousActivity}
                   disabled={currentActivityIndex === 0 || isNavigating}
                   className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  dir="ltr"
                 >
                   {isNavigating ? (
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
                   ) : (
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowLeft className="w-4 h-4" />
                   )}
-                  <span>السابق</span>
+                  <span>Previous</span>
                 </button>
                 
                 <button
                   onClick={nextActivity}
                   disabled={currentActivityIndex === section.activities.length - 1 || isNavigating}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  dir="ltr"
                 >
                   <span>
-                    {currentResponse.trim() ? 'حفظ والتالي' : 'التالي'}
+                    {currentResponse.trim() ? 'Save & Next' : 'Next'}
                   </span>
                   {isNavigating ? (
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                   ) : (
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4" />
                   )}
                 </button>
               </div>
 
-              <div className="flex items-center gap-3 order-1 sm:order-2">
+              <div className="flex items-center gap-3 order-1 sm:order-2" dir="ltr">
                 <button
                   onClick={saveResponse}
                   disabled={!currentResponse.trim() || isSaving}
                   className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  dir="ltr"
                 >
                   {isSaving ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>جاري الحفظ...</span>
+                      <span>Saving...</span>
                     </>
                   ) : (
                     <>
                       <Save className="w-4 h-4" />
-                      <span>حفظ فقط</span>
+                      <span>Save Only</span>
                     </>
                   )}
                 </button>
@@ -545,9 +548,10 @@ export default function SectionPage() {
                     onClick={completeSection}
                     className="flex items-center gap-2 px-6 py-2 text-white rounded-lg hover:shadow-lg transition-all"
                     style={{ backgroundColor: '#e74c3c' }}
+                    dir="ltr"
                   >
                     <CheckCircle className="w-4 h-4" />
-                    <span>إنهاء القسم</span>
+                    <span>Complete Section</span>
                   </button>
                 )}
               </div>
