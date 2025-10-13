@@ -266,6 +266,14 @@ export default function SectionPage() {
     return getCompletedActivitiesCount() === (section?.activities.length || 0);
   };
 
+  // Function to detect if text is primarily English
+  const isEnglishText = (text: string) => {
+    if (!text) return false;
+    const englishChars = text.match(/[a-zA-Z]/g) || [];
+    const arabicChars = text.match(/[\u0600-\u06FF]/g) || [];
+    return englishChars.length > arabicChars.length;
+  };
+
   if (status === 'loading' || isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-red-50 flex items-center justify-center">
@@ -434,9 +442,11 @@ export default function SectionPage() {
               </div>
               
               {currentActivity.description && (
-                <p className="text-gray-600 text-sm mb-4">
-                  {currentActivity.description}
-                </p>
+                <div className="text-gray-600 text-sm mb-4" dir="ltr">
+                  <p className="text-left">
+                    {currentActivity.description}
+                  </p>
+                </div>
               )}
             </div>
 
@@ -465,8 +475,11 @@ export default function SectionPage() {
                     saveResponse();
                   }
                 }}
-                className="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                placeholder="اكتب إجابتك هنا... (Ctrl+Enter للحفظ والانتقال للتالي، Ctrl+S للحفظ فقط)"
+                dir={isEnglishText(currentResponse) ? "ltr" : "rtl"}
+                className={`w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${
+                  isEnglishText(currentResponse) ? 'text-left' : 'text-right'
+                }`}
+                placeholder="Write your answer here... (Ctrl+Enter to save and go to next, Ctrl+S to save only) | اكتب إجابتك هنا..."
               />
               {currentResponse.trim() && !isCurrentActivityCompleted() && (
                 <div className="mt-2 text-xs text-amber-600 flex items-center gap-1">
