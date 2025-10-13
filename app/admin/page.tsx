@@ -16,7 +16,9 @@ import {
   Search,
   Filter,
   User,
-  LogOut
+  LogOut,
+  FileText,
+  ArrowRight
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -189,11 +191,98 @@ export default function AdminDashboard() {
 
       <div className="container mx-auto px-4 py-4 sm:py-8">
         <div className="max-w-7xl mx-auto">
+          {/* Navigation Menu */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 p-4 sm:p-6 mb-6"
+          >
+            <h2 className="text-lg sm:text-xl font-bold mb-4" style={{ color: '#0e25ac' }}>
+              القائمة الرئيسية
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <button
+                onClick={() => window.location.reload()}
+                className="flex flex-col items-center gap-2 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors border-2 border-blue-200"
+              >
+                <Users className="w-6 h-6 text-blue-600" />
+                <span className="text-sm font-medium text-blue-700">المستخدمين</span>
+              </button>
+              
+              <button
+                onClick={() => router.push('/admin/assessment-results')}
+                className="flex flex-col items-center gap-2 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors border-2 border-green-200"
+              >
+                <FileText className="w-6 h-6 text-green-600" />
+                <span className="text-sm font-medium text-green-700">نتائج الاختبارات</span>
+              </button>
+              
+              <button className="flex flex-col items-center gap-2 p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors border-2 border-purple-200">
+                <BarChart3 className="w-6 h-6 text-purple-600" />
+                <span className="text-sm font-medium text-purple-700">الإحصائيات</span>
+              </button>
+              
+              <button className="flex flex-col items-center gap-2 p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors border-2 border-yellow-200">
+                <Download className="w-6 h-6 text-yellow-600" />
+                <span className="text-sm font-medium text-yellow-700">التصدير</span>
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Quick Actions */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 p-4 sm:p-6 mb-6 sm:mb-8"
+          >
+            <h2 className="text-lg sm:text-xl font-bold mb-4" style={{ color: '#0e25ac' }}>
+              الإجراءات السريعة
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <button
+                onClick={() => router.push('/admin/assessment-results')}
+                className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105"
+              >
+                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">نتائج الاختبارات</div>
+                  <div className="text-sm text-blue-100">عرض النتائج المكتملة</div>
+                </div>
+                <ArrowRight className="w-5 h-5 mr-auto" />
+              </button>
+              
+              <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
+                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Download className="w-5 h-5" />
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">تصدير البيانات</div>
+                  <div className="text-sm text-green-100">تحميل تقرير شامل</div>
+                </div>
+                <ArrowRight className="w-5 h-5 mr-auto" />
+              </button>
+              
+              <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105">
+                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5" />
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">الإحصائيات</div>
+                  <div className="text-sm text-purple-100">تقارير مفصلة</div>
+                </div>
+                <ArrowRight className="w-5 h-5 mr-auto" />
+              </button>
+            </div>
+          </motion.div>
+
           {/* Stats Cards */}
           {stats && (
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
               className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8"
             >
               <div className="bg-white rounded-xl p-3 sm:p-6 shadow-lg border-2 border-gray-100">
@@ -258,19 +347,34 @@ export default function AdminDashboard() {
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.2 }}
             className="bg-white rounded-2xl shadow-lg border-2 border-gray-100"
           >
             <div className="p-4 sm:p-6 border-b border-gray-200">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
-                <h2 className="text-lg sm:text-xl font-bold" style={{ color: '#0e25ac' }}>
-                  المستخدمين والنتائج
-                </h2>
-                <button className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base">
-                  <Download className="w-4 h-4" />
-                  <span className="hidden sm:inline">تصدير البيانات</span>
-                  <span className="sm:hidden">تصدير</span>
-                </button>
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold" style={{ color: '#0e25ac' }}>
+                    المستخدمين والنتائج
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    مرتبة حسب تاريخ التسجيل (الأحدث أولاً)
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <button 
+                    onClick={() => router.push('/admin/assessment-results')}
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span className="hidden sm:inline">نتائج الاختبارات</span>
+                    <span className="sm:hidden">النتائج</span>
+                  </button>
+                  <button className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base">
+                    <Download className="w-4 h-4" />
+                    <span className="hidden sm:inline">تصدير البيانات</span>
+                    <span className="sm:hidden">تصدير</span>
+                  </button>
+                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
