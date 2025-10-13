@@ -59,6 +59,7 @@ export default function SectionPage() {
   const [currentResponse, setCurrentResponse] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [showContent, setShowContent] = useState(true);
 
   useEffect(() => {
@@ -178,35 +179,57 @@ export default function SectionPage() {
     }
   };
 
-  const nextActivity = () => {
-    if (currentActivityIndex < (section?.activities.length || 0) - 1) {
-      setCurrentActivityIndex(currentActivityIndex + 1);
-      setCurrentResponse('');
+  const nextActivity = async () => {
+    setIsNavigating(true);
+    
+    try {
+      // Auto-save current response if there's content
+      if (currentResponse.trim()) {
+        await saveResponse();
+      }
       
-      // Load next activity response if exists
-      const nextActivity = section?.activities[currentActivityIndex + 1];
-      if (nextActivity) {
-        const existingResponse = userResponses.find(r => r.activityId === nextActivity.id);
-        if (existingResponse) {
-          setCurrentResponse(existingResponse.response);
+      if (currentActivityIndex < (section?.activities.length || 0) - 1) {
+        setCurrentActivityIndex(currentActivityIndex + 1);
+        setCurrentResponse('');
+        
+        // Load next activity response if exists
+        const nextActivity = section?.activities[currentActivityIndex + 1];
+        if (nextActivity) {
+          const existingResponse = userResponses.find(r => r.activityId === nextActivity.id);
+          if (existingResponse) {
+            setCurrentResponse(existingResponse.response);
+          }
         }
       }
+    } finally {
+      setIsNavigating(false);
     }
   };
 
-  const previousActivity = () => {
-    if (currentActivityIndex > 0) {
-      setCurrentActivityIndex(currentActivityIndex - 1);
-      setCurrentResponse('');
+  const previousActivity = async () => {
+    setIsNavigating(true);
+    
+    try {
+      // Auto-save current response if there's content
+      if (currentResponse.trim()) {
+        await saveResponse();
+      }
       
-      // Load previous activity response if exists
-      const prevActivity = section?.activities[currentActivityIndex - 1];
-      if (prevActivity) {
-        const existingResponse = userResponses.find(r => r.activityId === prevActivity.id);
-        if (existingResponse) {
-          setCurrentResponse(existingResponse.response);
+      if (currentActivityIndex > 0) {
+        setCurrentActivityIndex(currentActivityIndex - 1);
+        setCurrentResponse('');
+        
+        // Load previous activity response if exists
+        const prevActivity = section?.activities[currentActivityIndex - 1];
+        if (prevActivity) {
+          const existingResponse = userResponses.find(r => r.activityId === prevActivity.id);
+          if (existingResponse) {
+            setCurrentResponse(existingResponse.response);
+          }
         }
       }
+    } finally {
+      setIsNavigating(false);
     }
   };
 
@@ -382,6 +405,25 @@ export default function SectionPage() {
               )}
             </div>
 
+            {/* Activity Progress Indicators */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              {section.activities.map((activity, index) => (
+                <div
+                  key={activity.id}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentActivityIndex
+                      ? 'bg-blue-500 scale-125'
+                      : userResponses.some(r => r.activityId === activity.id)
+                      ? 'bg-green-500'
+                      : 'bg-gray-300'
+                  }`}
+                  title={`${activity.title} - ${
+                    userResponses.some(r => r.activityId === activity.id) ? 'مكتمل' : 'غير مكتمل'
+                  }`}
+                />
+              ))}
+            </div>
+
             {/* Activity Content */}
             <div className="mb-6">
               <div className="bg-blue-50 p-4 rounded-lg mb-4">
@@ -399,44 +441,77 @@ export default function SectionPage() {
 
             {/* Response Area */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                إجابتك:
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  إجابتك:
+                </label>
+                <div className="text-xs text-gray-500">
+                  {currentResponse.length} حرف
+                </div>
+              </div>
               <textarea
                 value={currentResponse}
                 onChange={(e) => setCurrentResponse(e.target.value)}
+                onKeyDown={(e) => {
+                  // Ctrl/Cmd + Enter to save and go to next
+                  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    nextActivity();
+                  }
+                  // Ctrl/Cmd + S to save
+                  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    saveResponse();
+                  }
+                }}
                 className="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                placeholder="اكتب إجابتك هنا..."
+                placeholder="اكتب إجابتك هنا... (Ctrl+Enter للحفظ والانتقال للتالي، Ctrl+S للحفظ فقط)"
               />
+              {currentResponse.trim() && !isCurrentActivityCompleted() && (
+                <div className="mt-2 text-xs text-amber-600 flex items-center gap-1">
+                  <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+                  <span>لم يتم حفظ الإجابة بعد</span>
+                </div>
+              )}
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3 order-2 sm:order-1">
                 <button
                   onClick={previousActivity}
-                  disabled={currentActivityIndex === 0}
+                  disabled={currentActivityIndex === 0 || isNavigating}
                   className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  <ArrowRight className="w-4 h-4" />
+                  {isNavigating ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+                  ) : (
+                    <ArrowRight className="w-4 h-4" />
+                  )}
                   <span>السابق</span>
                 </button>
                 
                 <button
                   onClick={nextActivity}
-                  disabled={currentActivityIndex === section.activities.length - 1}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  disabled={currentActivityIndex === section.activities.length - 1 || isNavigating}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  <span>التالي</span>
-                  <ArrowLeft className="w-4 h-4" />
+                  <span>
+                    {currentResponse.trim() ? 'حفظ والتالي' : 'التالي'}
+                  </span>
+                  {isNavigating ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  ) : (
+                    <ArrowLeft className="w-4 h-4" />
+                  )}
                 </button>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 order-1 sm:order-2">
                 <button
                   onClick={saveResponse}
                   disabled={!currentResponse.trim() || isSaving}
-                  className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {isSaving ? (
                     <>
@@ -446,7 +521,7 @@ export default function SectionPage() {
                   ) : (
                     <>
                       <Save className="w-4 h-4" />
-                      <span>حفظ الإجابة</span>
+                      <span>حفظ فقط</span>
                     </>
                   )}
                 </button>
