@@ -534,69 +534,16 @@ export default function ThankYou() {
 
   // Default upsell page
   return (
-    <main className="h-screen bg-white overflow-hidden flex items-center justify-center" dir="rtl">
+    <main className="min-h-screen lg:h-screen bg-white lg:overflow-hidden flex items-center justify-center" dir="rtl">
       <div className="w-full max-w-6xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-8 items-center h-full">
+        <div className="grid lg:grid-cols-2 gap-8 items-center lg:h-full">
       
-          {/* Left Side - Success & Content */}
-            <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
-          >
-            {/* Logo & Success */}
-            <div className="text-center lg:text-right">
-            <motion.div 
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring" }}
-                className="w-16 h-16 mx-auto lg:mx-0 mb-4 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center shadow-lg"
-            >
-                <Timer className="w-8 h-8 text-red-600 animate-pulse" />
-            </motion.div>
-            
-              <h1 className="text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-red-600 bg-clip-text text-transparent" style={{ color: '#003359' }}>
-                انتظر! لم يتم إكمال التسجيل بعد
-            </h1>
-            
-              <p className="text-gray-600 mb-4">
-                لإتمام عملية التسجيل والحصول على عرضك الحصري
-              </p>
-            </div>
-
-            {/* Benefits */}
-            <div>
-              <h3 className="text-lg font-bold mb-4 text-center lg:text-right" style={{ color: '#003359' }}>
-                🎁 ماذا ستحصل عليه اليوم؟
-              </h3>
-              <CompactBenefits />
-              
-              <div className="bg-gradient-to-r from-red-50 to-blue-50 rounded-xl p-4 border border-gray-100">
-                <div className="flex items-center justify-center gap-4 mb-2">
-                <div className="text-center">
-                    <div className="text-2xl font-bold text-red-600">47 ريال</div>
-                    <div className="text-xs text-red-600">🔥 اليوم فقط</div>
-                  </div>
-                  <ArrowRight className="w-6 h-6 text-blue-500" />
-                  <div className="text-center">
-                    <div className="text-lg font-bold line-through text-gray-500">1500 ريال</div>
-                    <div className="text-xs text-gray-600">السعر الأصلي</div>
-                  </div>
-                   
-                </div>
-                <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-3 py-1 rounded-full text-sm font-bold text-center">
-                  خصم 97% - وفر 1453 ريال!
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right Side - Offer & CTA */}
+          {/* Right Side - Offer & CTA - First on Mobile */}
           <motion.div 
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-gradient-to-br rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl"
+            className="bg-gradient-to-br rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl order-1 lg:order-2"
             style={{ background: 'linear-gradient(135deg, #de1135, #b91c2c)' }}
           >
             {/* Decorative elements */}
@@ -716,8 +663,60 @@ export default function ThankYou() {
               </div>
             </div>
           </motion.div>
-          </div>
+
+          {/* Left Side - Success & Content - Second on Mobile */}
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-6 order-2 lg:order-1"
+          >
+            {/* Logo & Success */}
+            <div className="text-center lg:text-right">
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring" }}
+                className="w-16 h-16 mx-auto lg:mx-0 mb-4 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center shadow-lg"
+              >
+                <Timer className="w-8 h-8 text-red-600 animate-pulse" />
+              </motion.div>
+              
+              <h1 className="text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-red-600 bg-clip-text text-transparent" style={{ color: '#003359' }}>
+                انتظر! لم يتم إكمال التسجيل بعد
+              </h1>
+              
+              <p className="text-gray-600 mb-4">
+                لإتمام عملية التسجيل والحصول على عرضك الحصري
+              </p>
+            </div>
+
+            {/* Benefits */}
+            <div>
+              <h3 className="text-lg font-bold mb-4 text-center lg:text-right" style={{ color: '#003359' }}>
+                🎁 ماذا ستحصل عليه اليوم؟
+              </h3>
+              <CompactBenefits />
+              
+              <div className="bg-gradient-to-r from-red-50 to-blue-50 rounded-xl p-4 border border-gray-100">
+                <div className="flex items-center justify-center gap-4 mb-2">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-red-600">47 ريال</div>
+                    <div className="text-xs text-red-600">🔥 اليوم فقط</div>
+                  </div>
+                  <ArrowRight className="w-6 h-6 text-blue-500" />
+                  <div className="text-center">
+                    <div className="text-lg font-bold line-through text-gray-500">1500 ريال</div>
+                    <div className="text-xs text-gray-600">السعر الأصلي</div>
+                  </div>
+                </div>
+                <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-3 py-1 rounded-full text-sm font-bold text-center">
+                  خصم 97% - وفر 1453 ريال!
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
+      </div>
     </main>
   );
 }
