@@ -217,7 +217,10 @@ export default function AdminDashboard() {
                 <span className="text-sm font-medium text-green-700">نتائج الاختبارات</span>
               </button>
               
-              <button className="flex flex-col items-center gap-2 p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors border-2 border-purple-200">
+              <button
+                onClick={() => router.push('/admin/statistics')}
+                className="flex flex-col items-center gap-2 p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors border-2 border-purple-200"
+              >
                 <BarChart3 className="w-6 h-6 text-purple-600" />
                 <span className="text-sm font-medium text-purple-700">الإحصائيات</span>
               </button>
@@ -264,7 +267,10 @@ export default function AdminDashboard() {
                 <ArrowRight className="w-5 h-5 mr-auto" />
               </button>
               
-              <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105">
+              <button
+                onClick={() => router.push('/admin/statistics')}
+                className="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105"
+              >
                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
                   <BarChart3 className="w-5 h-5" />
                 </div>
@@ -477,7 +483,7 @@ export default function AdminDashboard() {
                           </div>
                         </td>
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden lg:table-cell">
-                          {new Date(user.createdAt).toLocaleDateString('ar-SA')}
+                          {new Date(user.createdAt).toLocaleDateString('en-US')}
                         </td>
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                           <button
@@ -526,7 +532,7 @@ export default function AdminDashboard() {
                   <p className="mb-1"><strong>الاسم:</strong> {selectedUser.name}</p>
                   <p className="mb-1"><strong>البريد الإلكتروني:</strong> {selectedUser.email}</p>
                   <p className="mb-1"><strong>الهاتف:</strong> {selectedUser.phone}</p>
-                  <p><strong>تاريخ التسجيل:</strong> {new Date(selectedUser.createdAt).toLocaleDateString('ar-SA')}</p>
+                  <p><strong>تاريخ التسجيل:</strong> {new Date(selectedUser.createdAt).toLocaleDateString('en-US')}</p>
                 </div>
               </div>
 
