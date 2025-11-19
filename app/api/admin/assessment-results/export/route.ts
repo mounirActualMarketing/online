@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch completed assessments with user and progress data
-    const assessments = await prisma.assessment.findMany({
+    const assessments = await prisma.userAssessment.findMany({
       where: {
         status: 'COMPLETED'
       },
@@ -25,27 +25,34 @@ export async function GET(request: NextRequest) {
             phone: true,
             createdAt: true
           }
-        },
-        progress: {
-          include: {
-            section: {
-              select: {
-                id: true,
-                title: true,
-                order: true,
-                description: true
-              }
-            }
-          },
-          orderBy: {
-            section: {
-              order: 'asc'
-            }
-          }
         }
       },
       orderBy: {
         completedAt: 'desc'
+      }
+    });
+
+    // Fetch user progress for completed assessments
+    const userIds = assessments.map(a => a.userId);
+    const userProgress = await prisma.userProgress.findMany({
+      where: {
+        userId: { in: userIds },
+        status: 'COMPLETED'
+      },
+      include: {
+        section: {
+          select: {
+            id: true,
+            title: true,
+            order: true,
+            description: true
+          }
+        }
+      },
+      orderBy: {
+        section: {
+          order: 'asc'
+        }
       }
     });
 
@@ -74,11 +81,13 @@ export async function GET(request: NextRequest) {
     ];
 
     const csvRows = assessments.map(assessment => {
-      const completedSections = assessment.progress.filter(p => p.status === 'COMPLETED');
+      // Get progress for this user
+      const userProgressData = userProgress.filter(p => p.userId === assessment.userId);
+      const completedSections = userProgressData.filter(p => p.status === 'COMPLETED');
       
       // Create array for section scores (10 sections)
       const sectionScores = new Array(10).fill('');
-      assessment.progress.forEach(progress => {
+      userProgressData.forEach(progress => {
         if (progress.status === 'COMPLETED' && progress.score && progress.section.order <= 10) {
           sectionScores[progress.section.order - 1] = Math.round(progress.score);
         }
@@ -90,10 +99,10 @@ export async function GET(request: NextRequest) {
         assessment.user.email,
         assessment.user.phone || '',
         new Date(assessment.user.createdAt).toLocaleDateString('en-US'),
-        new Date(assessment.startedAt).toLocaleDateString('en-US'),
+        assessment.startedAt ? new Date(assessment.startedAt).toLocaleDateString('en-US') : '',
         assessment.completedAt ? new Date(assessment.completedAt).toLocaleDateString('en-US') : '',
         assessment.score ? Math.round(assessment.score) : '',
-        assessment.progress.length,
+        userProgressData.length,
         completedSections.length,
         ...sectionScores
       ];

@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     const totalPayments = await prisma.payment.count({
       where: { status: 'COMPLETED' }
     });
-    const completedAssessments = await prisma.assessment.count({
+    const completedAssessments = await prisma.userAssessment.count({
       where: { status: 'COMPLETED' }
     });
     
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     const totalRevenue = revenueResult._sum.amount || 0;
 
     // Average score calculation
-    const avgScoreResult = await prisma.assessment.aggregate({
+    const avgScoreResult = await prisma.userAssessment.aggregate({
       where: { 
         status: 'COMPLETED',
         score: { not: null }
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     const averageScore = avgScoreResult._avg.score || 0;
 
     // Completion rate
-    const totalAssessments = await prisma.assessment.count();
+    const totalAssessments = await prisma.userAssessment.count();
     const completionRate = totalAssessments > 0 ? (completedAssessments / totalAssessments) * 100 : 0;
 
     // User growth data (simplified - you might want to group by date)
@@ -81,15 +81,15 @@ export async function GET(request: NextRequest) {
 
     // Assessment statistics
     const assessmentStats = {
-      completed: await prisma.assessment.count({ where: { status: 'COMPLETED' } }),
-      inProgress: await prisma.assessment.count({ where: { status: 'IN_PROGRESS' } }),
-      notStarted: await prisma.assessment.count({ where: { status: 'NOT_STARTED' } })
+      completed: await prisma.userAssessment.count({ where: { status: 'COMPLETED' } }),
+      inProgress: await prisma.userAssessment.count({ where: { status: 'IN_PROGRESS' } }),
+      notStarted: await prisma.userAssessment.count({ where: { status: 'NOT_STARTED' } })
     };
 
     // Section performance
-    const sectionPerformance = await prisma.section.findMany({
+    const sectionPerformance = await prisma.assessmentSection.findMany({
       include: {
-        progress: {
+        userProgress: {
           where: {
             status: 'COMPLETED',
             score: { not: null }
@@ -100,13 +100,13 @@ export async function GET(request: NextRequest) {
 
     const sectionStats = await Promise.all(
       sectionPerformance.map(async (section) => {
-        const totalAttempts = section.progress.length;
+        const totalAttempts = section.userProgress.length;
         const averageScore = totalAttempts > 0 
-          ? section.progress.reduce((sum, p) => sum + (p.score || 0), 0) / totalAttempts 
+          ? section.userProgress.reduce((sum, p) => sum + (p.score || 0), 0) / totalAttempts 
           : 0;
         
         // Calculate completion rate for this section
-        const totalUsersWithProgress = await prisma.progress.count({
+        const totalUsersWithProgress = await prisma.userProgress.count({
           where: { sectionId: section.id }
         });
         const completionRate = totalUsersWithProgress > 0 
@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    const recentAssessments = await prisma.assessment.findMany({
+    const recentAssessments = await prisma.userAssessment.findMany({
       where: {
         status: 'COMPLETED',
         completedAt: { gte: startDate }
