@@ -98,28 +98,30 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    const sectionStats = sectionPerformance.map(section => {
-      const totalAttempts = section.progress.length;
-      const averageScore = totalAttempts > 0 
-        ? section.progress.reduce((sum, p) => sum + (p.score || 0), 0) / totalAttempts 
-        : 0;
-      
-      // Calculate completion rate for this section
-      const totalUsersWithProgress = await prisma.progress.count({
-        where: { sectionId: section.id }
-      });
-      const completionRate = totalUsersWithProgress > 0 
-        ? (totalAttempts / totalUsersWithProgress) * 100 
-        : 0;
+    const sectionStats = await Promise.all(
+      sectionPerformance.map(async (section) => {
+        const totalAttempts = section.progress.length;
+        const averageScore = totalAttempts > 0 
+          ? section.progress.reduce((sum, p) => sum + (p.score || 0), 0) / totalAttempts 
+          : 0;
+        
+        // Calculate completion rate for this section
+        const totalUsersWithProgress = await prisma.progress.count({
+          where: { sectionId: section.id }
+        });
+        const completionRate = totalUsersWithProgress > 0 
+          ? (totalAttempts / totalUsersWithProgress) * 100 
+          : 0;
 
-      return {
-        sectionId: section.id,
-        title: section.title,
-        averageScore,
-        completionRate,
-        totalAttempts
-      };
-    });
+        return {
+          sectionId: section.id,
+          title: section.title,
+          averageScore,
+          completionRate,
+          totalAttempts
+        };
+      })
+    );
 
     // Recent activity
     const recentUsers = await prisma.user.findMany({
@@ -200,17 +202,7 @@ export async function GET(request: NextRequest) {
       userGrowth: userGrowthArray,
       paymentStats,
       assessmentStats,
-      sectionPerformance: await Promise.all(sectionStats.map(async (stat) => {
-        const totalUsersWithProgress = await prisma.progress.count({
-          where: { sectionId: stat.sectionId }
-        });
-        return {
-          ...stat,
-          completionRate: totalUsersWithProgress > 0 
-            ? (stat.totalAttempts / totalUsersWithProgress) * 100 
-            : 0
-        };
-      })),
+      sectionPerformance: sectionStats,
       recentActivity
     };
 

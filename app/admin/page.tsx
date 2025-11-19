@@ -69,6 +69,7 @@ export default function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -135,6 +136,34 @@ export default function AdminDashboard() {
         return 'لم يبدأ';
       default:
         return 'غير محدد';
+    }
+  };
+
+  const handleExportData = async () => {
+    try {
+      setIsExporting(true);
+      
+      const response = await fetch('/api/admin/export');
+      
+      if (!response.ok) {
+        throw new Error('Failed to export data');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `admin-data-export-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('حدث خطأ أثناء تصدير البيانات');
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -225,9 +254,19 @@ export default function AdminDashboard() {
                 <span className="text-sm font-medium text-purple-700">الإحصائيات</span>
               </button>
               
-              <button className="flex flex-col items-center gap-2 p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors border-2 border-yellow-200">
-                <Download className="w-6 h-6 text-yellow-600" />
-                <span className="text-sm font-medium text-yellow-700">التصدير</span>
+              <button 
+                onClick={handleExportData}
+                disabled={isExporting}
+                className="flex flex-col items-center gap-2 p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors border-2 border-yellow-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isExporting ? (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-yellow-600"></div>
+                ) : (
+                  <Download className="w-6 h-6 text-yellow-600" />
+                )}
+                <span className="text-sm font-medium text-yellow-700">
+                  {isExporting ? 'جاري التصدير...' : 'التصدير'}
+                </span>
               </button>
             </div>
           </motion.div>
@@ -256,13 +295,25 @@ export default function AdminDashboard() {
                 <ArrowRight className="w-5 h-5 mr-auto" />
               </button>
               
-              <button className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
+              <button 
+                onClick={handleExportData}
+                disabled={isExporting}
+                className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                  <Download className="w-5 h-5" />
+                  {isExporting ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    <Download className="w-5 h-5" />
+                  )}
                 </div>
                 <div className="text-right">
-                  <div className="font-semibold">تصدير البيانات</div>
-                  <div className="text-sm text-green-100">تحميل تقرير شامل</div>
+                  <div className="font-semibold">
+                    {isExporting ? 'جاري التصدير...' : 'تصدير البيانات'}
+                  </div>
+                  <div className="text-sm text-green-100">
+                    {isExporting ? 'يرجى الانتظار' : 'تحميل تقرير شامل'}
+                  </div>
                 </div>
                 <ArrowRight className="w-5 h-5 mr-auto" />
               </button>
@@ -375,11 +426,23 @@ export default function AdminDashboard() {
                     <span className="hidden sm:inline">نتائج الاختبارات</span>
                     <span className="sm:hidden">النتائج</span>
                   </button>
-                  <button className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base">
-                    <Download className="w-4 h-4" />
-                    <span className="hidden sm:inline">تصدير البيانات</span>
-                    <span className="sm:hidden">تصدير</span>
-                  </button>
+              <button 
+                onClick={handleExportData}
+                disabled={isExporting}
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isExporting ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                ) : (
+                  <Download className="w-4 h-4" />
+                )}
+                <span className="hidden sm:inline">
+                  {isExporting ? 'جاري التصدير...' : 'تصدير البيانات'}
+                </span>
+                <span className="sm:hidden">
+                  {isExporting ? 'جاري...' : 'تصدير'}
+                </span>
+              </button>
                 </div>
               </div>
 

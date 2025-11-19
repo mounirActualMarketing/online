@@ -102,38 +102,98 @@ const CountdownTimer = ({ initialTime = 7200 }: { initialTime?: number }) => {
   );
 };
 
-// Compact Benefits Component
+// Enhanced 500 SAR Credit Component
 const CompactBenefits = () => {
-  const benefits = [
-    { icon: <Gift className="w-4 h-4" />, title: "رصيد فوري 500 ريال", value: "استخدمه على أي دورة" },
-    { icon: <Gift className="w-4 h-4" />, title: "استفد من أكثر من 5500 دورة تدريبية", value: "تعلم في أي وقت و من أي مكان" },
-    { icon: <Shield className="w-4 h-4" />, title: "حقيبة أدوات الطلاقة (PDF)", value: "50 عبارة + خارطة طريق" },
-    { icon: <Globe className="w-4 h-4" />, title: "اختبار تقييم الطلاقة", value: "خطة تعلم مخصصة" },
-    { icon: <MessageCircle className="w-4 h-4" />, title: "جلسة حصرية 1:1", value: "بناء الثقة في التحدث" }
-  ];
-
   return (
-    <div className="grid grid-cols-1 gap-3 mb-6">
-      {benefits.map((benefit, index) => (
-    <motion.div 
-          key={index}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.1 }}
-          className="bg-gradient-to-r from-gray-50 to-white p-4 rounded-lg border border-gray-100 hover:shadow-md transition-all duration-200"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br flex items-center justify-center text-white shadow-sm flex-shrink-0" style={{ background: 'linear-gradient(135deg, #de1135, #b91c2c)' }}>
-              {benefit.icon}
-        </div>
-        <div className="flex-1">
-              <div className="text-sm font-semibold text-gray-800 mb-1">{benefit.title}</div>
-              <div className="text-xs text-gray-600">{benefit.value}</div>
+    <div className="mb-10">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-50 via-emerald-50 to-green-100 border-2 border-green-200 shadow-xl hover:shadow-2xl transition-all duration-300"
+      >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-emerald-400/10"></div>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-green-300/20 rounded-full -translate-y-16 translate-x-16"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-emerald-300/20 rounded-full translate-y-12 -translate-x-12"></div>
+        
+        <div className="relative z-10 p-8 sm:p-10">
+          <div className="flex items-center gap-6 mb-6">
+            <motion.div 
+              animate={{ 
+                scale: [1, 1.1, 1],
+                rotate: [0, 5, -5, 0]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 3
+              }}
+              className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shadow-lg"
+            >
+              <Gift className="w-8 h-8" />
+            </motion.div>
+            
+            <div className="flex-1">
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-right"
+              >
+                <div className="text-2xl sm:text-3xl font-bold text-green-700 mb-1">
+                  رصيد فوري 
+                  <span className="text-3xl sm:text-4xl text-green-600 mx-2">500</span>
+                  ريال
+                </div>
+                <div className="text-green-600 font-medium text-sm sm:text-base">
+                  استخدمه على أي دورة تدريبية
+                </div>
+              </motion.div>
             </div>
           </div>
-        </motion.div>
-        ))}
-      </div>
+          
+          {/* Enhanced Features */}
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white/80 backdrop-blur-sm rounded-xl p-5 border border-green-200/50 shadow-sm"
+          >
+            <div className="grid grid-cols-2 gap-6 text-center">
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mb-2">
+                  <CheckCircle className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xs text-green-700 font-medium">فوري ومباشر</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center mb-2">
+                  <Star className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xs text-green-700 font-medium">جميع الدورات</span>
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* Sparkle Effect */}
+          <motion.div
+            animate={{
+              opacity: [0, 1, 0],
+              scale: [0.8, 1.2, 0.8]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatDelay: 4
+            }}
+            className="absolute top-4 left-4 text-yellow-400"
+          >
+            <Zap className="w-6 h-6" />
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
@@ -534,9 +594,9 @@ export default function ThankYou() {
 
   // Default upsell page
   return (
-    <main className="min-h-screen lg:h-screen bg-white lg:overflow-hidden flex items-center justify-center" dir="rtl">
-      <div className="w-full max-w-6xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-8 items-center lg:h-full">
+    <main className="min-h-screen lg:h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 lg:overflow-hidden flex items-center justify-center" dir="rtl">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center lg:h-full">
       
           {/* Right Side - Offer & CTA - First on Mobile */}
           <motion.div 
@@ -668,7 +728,7 @@ export default function ThankYou() {
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-6 order-2 lg:order-1"
+            className="space-y-8 order-2 lg:order-1"
           >
             {/* Logo & Success */}
             <div className="text-center lg:text-right">
@@ -676,43 +736,94 @@ export default function ThankYou() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring" }}
-                className="w-16 h-16 mx-auto lg:mx-0 mb-4 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center shadow-lg"
+                className="w-20 h-20 mx-auto lg:mx-0 mb-6 bg-gradient-to-br from-red-100 via-red-200 to-red-300 rounded-full flex items-center justify-center shadow-xl"
               >
-                <Timer className="w-8 h-8 text-red-600 animate-pulse" />
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 10, -10, 0]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 1
+                  }}
+                >
+                  <Timer className="w-10 h-10 text-red-600" />
+                </motion.div>
               </motion.div>
               
-              <h1 className="text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-red-600 bg-clip-text text-transparent" style={{ color: '#003359' }}>
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-3xl lg:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-red-600 bg-clip-text text-transparent"
+              >
                 انتظر! لم يتم إكمال التسجيل بعد
-              </h1>
+              </motion.h1>
               
-              <p className="text-gray-600 mb-4">
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="text-gray-600 mb-6 text-lg"
+              >
                 لإتمام عملية التسجيل والحصول على عرضك الحصري
-              </p>
+              </motion.p>
             </div>
 
-            {/* Benefits */}
+            {/* Enhanced Benefits Section */}
             <div>
-              <h3 className="text-lg font-bold mb-4 text-center lg:text-right" style={{ color: '#003359' }}>
-                🎁 ماذا ستحصل عليه اليوم؟
-              </h3>
+              <motion.h3 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-xl lg:text-2xl font-bold mb-6 text-center lg:text-right bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent"
+              >
+                🎁 عرضك الحصري اليوم
+              </motion.h3>
               <CompactBenefits />
               
-              <div className="bg-gradient-to-r from-red-50 to-blue-50 rounded-xl p-4 border border-gray-100">
-                <div className="flex items-center justify-center gap-4 mb-2">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-red-600">47 ريال</div>
-                    <div className="text-xs text-red-600">🔥 اليوم فقط</div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200 shadow-lg"
+              >
+                <div className="text-center mb-4">
+                  <div className="text-sm text-blue-600 font-medium mb-2">💎 عرض محدود</div>
+                  <div className="flex items-center justify-center gap-4 mb-3">
+                    <div className="text-center">
+                      <motion.div 
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="text-3xl font-bold text-blue-600"
+                      >
+                        47 ريال
+                      </motion.div>
+                      <div className="text-xs text-blue-500 font-medium">🔥 اليوم فقط</div>
+                    </div>
+                    <ArrowRight className="w-6 h-6 text-blue-500" />
+                    <div className="text-center">
+                      <div className="text-xl font-bold line-through text-gray-400">1500 ريال</div>
+                      <div className="text-xs text-gray-500">السعر الأصلي</div>
+                    </div>
                   </div>
-                  <ArrowRight className="w-6 h-6 text-blue-500" />
-                  <div className="text-center">
-                    <div className="text-lg font-bold line-through text-gray-500">1500 ريال</div>
-                    <div className="text-xs text-gray-600">السعر الأصلي</div>
-                  </div>
+                  <motion.div 
+                    animate={{ 
+                      background: [
+                        'linear-gradient(45deg, #fbbf24, #f59e0b)',
+                        'linear-gradient(45deg, #f59e0b, #d97706)',
+                        'linear-gradient(45deg, #fbbf24, #f59e0b)'
+                      ]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-4 py-2 rounded-full text-sm font-bold shadow-md"
+                  >
+                    خصم 97% - وفر 1453 ريال + رصيد 500 ريال!
+                  </motion.div>
                 </div>
-                <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-3 py-1 rounded-full text-sm font-bold text-center">
-                  خصم 97% - وفر 1453 ريال!
-                </div>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>

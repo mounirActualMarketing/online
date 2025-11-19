@@ -84,6 +84,7 @@ export default function AssessmentResults() {
   const [results, setResults] = useState<AssessmentResult[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
   const [selectedResult, setSelectedResult] = useState<AssessmentResult | null>(null);
 
   useEffect(() => {
@@ -101,6 +102,34 @@ export default function AssessmentResults() {
       fetchAssessmentResults();
     }
   }, [status, session, router]);
+
+  const handleExportResults = async () => {
+    try {
+      setIsExporting(true);
+      
+      const response = await fetch('/api/admin/assessment-results/export');
+      
+      if (!response.ok) {
+        throw new Error('Failed to export results');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `assessment-results-export-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      alert('حدث خطأ أثناء تصدير النتائج');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const fetchAssessmentResults = async () => {
     try {
@@ -227,10 +256,22 @@ export default function AssessmentResults() {
               <h2 className="text-lg sm:text-xl font-bold" style={{ color: '#0e25ac' }}>
                 البحث والتصفية
               </h2>
-              <button className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base">
-                <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">تصدير النتائج</span>
-                <span className="sm:hidden">تصدير</span>
+              <button 
+                onClick={handleExportResults}
+                disabled={isExporting}
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isExporting ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                ) : (
+                  <Download className="w-4 h-4" />
+                )}
+                <span className="hidden sm:inline">
+                  {isExporting ? 'جاري التصدير...' : 'تصدير النتائج'}
+                </span>
+                <span className="sm:hidden">
+                  {isExporting ? 'جاري...' : 'تصدير'}
+                </span>
               </button>
             </div>
 
