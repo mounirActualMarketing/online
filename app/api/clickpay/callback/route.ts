@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { generateRandomPassword, hashPassword } from '@/lib/utils';
 import { sendWelcomeEmail, sendAdminNotification } from '@/lib/email';
+import { sendCredentialsViaWhatsApp } from '@/lib/whatsapp';
 
 interface ClickPayCallbackData {
   tran_ref: string;
@@ -163,7 +164,22 @@ export async function POST(request: NextRequest) {
           // Continue even if email fails
         }
 
-        console.log('✅ User created successfully (emails may have failed)');
+        // Send credentials via WhatsApp
+        try {
+          await sendCredentialsViaWhatsApp({
+            customerName: customer_details.name,
+            email: customer_details.email,
+            phone: customer_details.phone,
+            password: randomPassword,
+            loginUrl: `${process.env.APP_URL}/auth/signin`,
+          });
+          console.log('✅ WhatsApp message sent successfully');
+        } catch (whatsappError) {
+          console.error('⚠️ Failed to send WhatsApp message:', whatsappError);
+          // Continue even if WhatsApp fails - email is the primary method
+        }
+
+        console.log('✅ User created successfully (emails/WhatsApp may have failed)');
 
       } catch (error) {
         console.error('❌ Error processing successful payment:', error);

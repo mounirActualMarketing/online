@@ -10,7 +10,8 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "db:test-seed": "tsx prisma/test-seed.ts"
+    "db:test-seed": "tsx prisma/test-seed.ts",
+    "test:whatsapp": "tsx scripts/test-whatsapp.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
