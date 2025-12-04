@@ -166,16 +166,43 @@ export async function POST(request: NextRequest) {
 
         // Send credentials via WhatsApp
         try {
-          await sendCredentialsViaWhatsApp({
+          console.log('📱 Attempting to send WhatsApp message...');
+          console.log('📱 Customer phone from payment:', customer_details.phone);
+          console.log('📱 Customer name:', customer_details.name);
+          console.log('📱 Customer email:', customer_details.email);
+          console.log('📱 Login URL:', `${process.env.APP_URL}/auth/signin`);
+          console.log('📱 Bavatel config check:', {
+            hasAccountId: !!process.env.BAVATEL_API_ACCOUNT_ID,
+            hasAccessToken: !!process.env.BAVATEL_API_ACCESS_TOKEN,
+            hasInboxId: !!process.env.BAVATEL_INBOX_ID,
+            hasTemplateName: !!process.env.BAVATEL_TEMPLATE_NAME,
+            templateName: process.env.BAVATEL_TEMPLATE_NAME,
+          });
+
+          if (!customer_details.phone) {
+            console.error('❌ WhatsApp: Customer phone number is missing!');
+            throw new Error('Customer phone number is required for WhatsApp');
+          }
+
+          const whatsappResult = await sendCredentialsViaWhatsApp({
             customerName: customer_details.name,
             email: customer_details.email,
             phone: customer_details.phone,
             password: randomPassword,
             loginUrl: `${process.env.APP_URL}/auth/signin`,
           });
-          console.log('✅ WhatsApp message sent successfully');
+
+          if (whatsappResult) {
+            console.log('✅ WhatsApp message sent successfully');
+          } else {
+            console.error('❌ WhatsApp message failed (returned false)');
+          }
         } catch (whatsappError) {
           console.error('⚠️ Failed to send WhatsApp message:', whatsappError);
+          if (whatsappError instanceof Error) {
+            console.error('⚠️ WhatsApp error message:', whatsappError.message);
+            console.error('⚠️ WhatsApp error stack:', whatsappError.stack);
+          }
           // Continue even if WhatsApp fails - email is the primary method
         }
 
