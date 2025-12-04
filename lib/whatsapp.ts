@@ -20,28 +20,40 @@ interface TemplateVariable {
 
 /**
  * Formats phone number to international format (E.164)
- * Assumes Saudi Arabia phone numbers if not already in international format
- * @param phone - Phone number to format
- * @returns Formatted phone number with country code
+ * Supports both Saudi Arabia (+966) and UAE (+971) phone numbers
+ * 
+ * Examples:
+ * - Saudi: +966501234567 → +966501234567 ✅
+ * - Saudi: 0501234567 → +966501234567 ✅
+ * - UAE: +971501234567 → +971501234567 ✅
+ * - UAE: 00971501234567 → +971501234567 ✅
+ * 
+ * @param phone - Phone number to format (any format)
+ * @returns Formatted phone number with country code in E.164 format
  */
 function formatPhoneNumber(phone: string): string {
-  // Remove all non-digit characters
-  let cleanPhone = phone.replace(/\D/g, '');
+  // Remove all non-digit characters except '+'
+  let cleanPhone = phone.replace(/[^\d+]/g, '');
   
   // If phone starts with '00', replace with '+'
   if (cleanPhone.startsWith('00')) {
     cleanPhone = '+' + cleanPhone.substring(2);
   }
   
-  // If phone doesn't start with '+', assume Saudi Arabia (+966)
-  if (!cleanPhone.startsWith('+')) {
-    // Remove leading '0' if present (Saudi numbers often start with 0)
-    if (cleanPhone.startsWith('0')) {
-      cleanPhone = cleanPhone.substring(1);
-    }
-    // Add Saudi country code
-    cleanPhone = '+966' + cleanPhone;
+  // If phone already starts with '+', return as is (preserves country code)
+  // This handles: +966 (Saudi), +971 (UAE), +1 (US), etc.
+  if (cleanPhone.startsWith('+')) {
+    return cleanPhone;
   }
+  
+  // If phone doesn't start with '+', assume Saudi Arabia (+966) as default
+  // This is because most customers are from Saudi Arabia
+  // Remove leading '0' if present (Saudi numbers often start with 0)
+  if (cleanPhone.startsWith('0')) {
+    cleanPhone = cleanPhone.substring(1);
+  }
+  // Add Saudi country code
+  cleanPhone = '+966' + cleanPhone;
   
   return cleanPhone;
 }
@@ -111,7 +123,7 @@ export async function sendWhatsAppMessage(data: WhatsAppMessageData): Promise<bo
       message: {
         template: {
           name: templateName,
-          language: 'ar', // Arabic language code
+          language: 'ar', // Arabic language code - try 'ar_SA' if this doesn't work
           parameters: {
             body: templateVariables, // Body parameters array
           },
@@ -126,6 +138,7 @@ export async function sendWhatsAppMessage(data: WhatsAppMessageData): Promise<bo
       template_name: templateName,
       template_language: 'ar',
       template_variables: templateVariables,
+      full_request_body: JSON.stringify(requestBody, null, 2),
     });
 
     // Send request to Bavatel API
@@ -147,6 +160,12 @@ export async function sendWhatsAppMessage(data: WhatsAppMessageData): Promise<bo
     let responseData: BavatelResponse;
     const responseText = await response.text();
     
+    console.log('📥 Bavatel API Raw Response:', {
+      status: response.status,
+      statusText: response.statusText,
+      rawResponse: responseText,
+    });
+    
     try {
       responseData = JSON.parse(responseText);
     } catch (parseError) {
@@ -154,11 +173,10 @@ export async function sendWhatsAppMessage(data: WhatsAppMessageData): Promise<bo
       responseData = { success: false, error: 'Invalid JSON response', message: responseText };
     }
 
-    console.log('📥 Bavatel API Response:', {
+    console.log('📥 Bavatel API Parsed Response:', {
       status: response.status,
       statusText: response.statusText,
       data: responseData,
-      rawResponse: responseText.substring(0, 500), // First 500 chars for debugging
     });
 
     if (!response.ok) {

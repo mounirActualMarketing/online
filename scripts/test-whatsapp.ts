@@ -11,6 +11,12 @@
  *   npx tsx scripts/test-whatsapp.ts +966501234567
  */
 
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+// Load .env.local file
+config({ path: resolve(process.cwd(), '.env.local') });
+
 import { sendCredentialsViaWhatsApp } from '../lib/whatsapp';
 
 // Test data - customize as needed
@@ -30,6 +36,8 @@ async function testWhatsApp() {
   console.log(`   Account ID: ${process.env.BAVATEL_API_ACCOUNT_ID || '❌ NOT SET'}`);
   console.log(`   Access Token: ${process.env.BAVATEL_API_ACCESS_TOKEN ? '✅ SET' : '❌ NOT SET'}`);
   console.log(`   API URL: ${process.env.BAVATEL_API_URL || '❌ NOT SET'}`);
+  console.log(`   Inbox ID: ${process.env.BAVATEL_INBOX_ID || '❌ NOT SET'}`);
+  console.log(`   Template Name: ${process.env.BAVATEL_TEMPLATE_NAME || '❌ NOT SET'}`);
   console.log('');
   
   console.log('📱 Test Message Data:');
