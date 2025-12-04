@@ -33,7 +33,7 @@ Select **"AUTHENTICATION"** category (this is best for login credentials)
 ### Step 4: Configure Template Details
 
 #### Template Name
-- **Name:** `wse_login_credentials` (or `wse_account_activation`)
+- **Name:** `wse_account_activation`
 - **Language:** Arabic (العربية)
 - **Category:** Authentication (or Utility)
 
@@ -106,10 +106,10 @@ Wall Street English
 Once approved:
 1. Go back to **Message templates**
 2. Find your template
-3. Copy the **exact template name** (e.g., `wse_login_credentials`)
+3. Copy the **exact template name** (e.g., `wse_account_activation`)
 4. Update `.env.local`:
    ```bash
-   BAVATEL_TEMPLATE_NAME=wse_login_credentials
+   BAVATEL_TEMPLATE_NAME=wse_account_activation
    ```
 
 ## Template Example (Copy-Paste Ready)
@@ -225,7 +225,7 @@ Once your template is approved:
 
 1. **Update `.env.local`:**
    ```bash
-   BAVATEL_TEMPLATE_NAME=wse_login_credentials
+   BAVATEL_TEMPLATE_NAME=wse_account_activation
    ```
 
 2. **Test with script:**
@@ -255,7 +255,7 @@ Once your template is approved:
 
 ## Quick Reference
 
-**Template Name Format:** `wse_login_credentials`
+**Template Name Format:** `wse_account_activation`
 **Category:** Authentication (recommended) or Utility
 **Language:** Arabic (العربية)
 **Variables:** 4 (Name, Email, Password, URL)

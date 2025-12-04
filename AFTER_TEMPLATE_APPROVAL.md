@@ -5,15 +5,15 @@
 ### Step 1: Verify Template Name
 
 1. Go to Meta Business Manager → WhatsApp Manager → Message Templates
-2. Find your template `wse_login_credentials`
+2. Find your template `wse_account_activation`
 3. Check status shows **"Approved"** ✅
-4. Copy the **exact template name** (it should be `wse_login_credentials`)
+4. Copy the **exact template name** (it should be `wse_account_activation`)
 
 ### Step 2: Verify Configuration
 
 Your `.env.local` should have:
 ```bash
-BAVATEL_TEMPLATE_NAME=wse_login_credentials
+BAVATEL_TEMPLATE_NAME=wse_account_activation
 ```
 
 If Meta gave it a different name, update this value to match exactly.
@@ -39,7 +39,7 @@ You should receive a WhatsApp message like:
 🔑 كلمة المرور: TestPass123!
 
 رابط الدخول:
-http://localhost:3000/auth/signin
+https://campaign.wallstreetenglish.edu.sa/auth/signin
 
 يمكنك الآن البدء في اختبار تحديد المستوى الخاص بك. 📚
 
@@ -82,7 +82,7 @@ When ready:
    BAVATEL_API_URL=https://business-chat.bevatel.com
    BAVATEL_INBOX_ID=61770
    BAVATEL_PHONE_NUMBER=+966920032081
-   BAVATEL_TEMPLATE_NAME=wse_login_credentials
+   BAVATEL_TEMPLATE_NAME=wse_account_activation
    ```
 
 2. **Deploy:**

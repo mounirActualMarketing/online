@@ -12,7 +12,7 @@ BAVATEL_API_ACCESS_TOKEN=63CXCSaixNAvYrawZb9QUVWD
 BAVATEL_API_URL=https://business-chat.bevatel.com
 BAVATEL_INBOX_ID=61770
 BAVATEL_PHONE_NUMBER=+966920032081
-BAVATEL_TEMPLATE_NAME=wse_login_credentials  # Set after creating template in Meta
+BAVATEL_TEMPLATE_NAME=wse_account_activation  # Set after creating template in Meta
 ```
 
 **Status:** ✅ Credentials configured - ⚠️ Need to create WhatsApp template in Meta Business Manager first!
@@ -278,7 +278,7 @@ Required env vars: BAVATEL_API_ACCOUNT_ID, BAVATEL_API_ACCESS_TOKEN, BAVATEL_API
 1. ✅ **Bavatel credentials configured** - Already done!
 2. ⚠️ **Create WhatsApp template in Meta Business Manager** - **REQUIRED!**
    - Follow guide: `META_TEMPLATE_SETUP.md` or `META_TEMPLATE_QUICK_GUIDE.md`
-   - Template name: `wse_login_credentials`
+   - Template name: `wse_account_activation`
    - Use Authentication category for faster approval (15 minutes)
    - Add 4 variables: Name, Email, Password, Login URL
 3. **Update `.env.local`** with template name after approval
@@ -299,7 +299,7 @@ npm run test:whatsapp +966920032081
 
 - [ ] Go to Meta Business Manager → WhatsApp → Message Templates
 - [ ] Click "+ Create template"
-- [ ] Name: `wse_login_credentials`
+- [ ] Name: `wse_account_activation`
 - [ ] Category: Authentication (or Utility)
 - [ ] Language: Arabic
 - [ ] Add 4 variables in Body: `{{1}}` Name, `{{2}}` Email, `{{3}}` Password, `{{4}}` URL

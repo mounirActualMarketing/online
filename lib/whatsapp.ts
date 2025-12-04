@@ -58,16 +58,15 @@ function createArabicMessage(data: WhatsAppMessageData): string {
 
 معلومات الدخول:
 📧 البريد الإلكتروني: ${data.email}
-🔑 كلمة المرور: ${data.password}
 
 رابط الدخول:
 ${data.loginUrl}
 
+🔑 كلمة المرور: تم إرسالها إلى بريدك الإلكتروني. يرجى التحقق من صندوق الوارد.
+
 يمكنك الآن البدء في اختبار تحديد المستوى الخاص بك. 📚
 
-شكراً لانضمامك إلى Wall Street English! 🌟
-
-احتفظ بهذه المعلومات في مكان آمن. ⚠️`;
+شكراً لانضمامك إلى Wall Street English! 🌟`;
 }
 
 /**
@@ -78,14 +77,14 @@ ${data.loginUrl}
 export async function sendWhatsAppMessage(data: WhatsAppMessageData): Promise<boolean> {
   const accountId = process.env.BAVATEL_API_ACCOUNT_ID;
   const accessToken = process.env.BAVATEL_API_ACCESS_TOKEN;
-  const apiUrl = process.env.BAVATEL_API_URL;
+  const apiUrl = process.env.BAVATEL_API_URL || 'https://chat.bevatel.com';
   const inboxId = process.env.BAVATEL_INBOX_ID;
-  const templateName = process.env.BAVATEL_TEMPLATE_NAME;
+  const templateName = process.env.BAVATEL_TEMPLATE_NAME || 'wse_account_activation';
 
   // Validate environment variables
-  if (!accountId || !accessToken || !apiUrl || !inboxId) {
+  if (!accountId || !accessToken || !inboxId) {
     console.error('❌ Bavatel WhatsApp: Missing API configuration');
-    console.error('Required env vars: BAVATEL_API_ACCOUNT_ID, BAVATEL_API_ACCESS_TOKEN, BAVATEL_API_URL, BAVATEL_INBOX_ID');
+    console.error('Required env vars: BAVATEL_API_ACCOUNT_ID, BAVATEL_API_ACCESS_TOKEN, BAVATEL_INBOX_ID');
     return false;
   }
 
@@ -95,64 +94,71 @@ export async function sendWhatsAppMessage(data: WhatsAppMessageData): Promise<bo
     console.log(`📱 Sending WhatsApp to: ${formattedPhone}`);
 
     // Prepare template variables for WhatsApp template
-    // Template should have variables: {{1}} for name, {{2}} for email, {{3}} for password, {{4}} for login URL
+    // Template should have variables: {{1}} for name, {{2}} for email, {{3}} for login URL
+    // Note: Password is NOT included due to Meta security policies
     const templateVariables = [
       data.customerName,      // Variable 1: Customer name
       data.email,             // Variable 2: Email
-      data.password,          // Variable 3: Password
-      data.loginUrl,          // Variable 4: Login URL
+      data.loginUrl,          // Variable 3: Login URL
     ];
 
-    // Prepare API request body for template message
-    const requestBody: any = {
-      api_account_id: accountId,
-      api_access_token: accessToken,
-      inbox_id: inboxId,
-      to: formattedPhone,
+    // Prepare API request body according to Bavatel API documentation
+    const requestBody = {
+      inbox_id: parseInt(inboxId, 10), // Convert to number
+      contact: {
+        phone_number: formattedPhone,
+      },
+      message: {
+        template: {
+          name: templateName,
+          language: 'ar', // Arabic language code
+          parameters: {
+            body: templateVariables, // Body parameters array
+          },
+        },
+      },
     };
 
-    // Use template if configured, otherwise fallback to free-form message
-    if (templateName) {
-      requestBody.template_name = templateName;
-      requestBody.template_variables = templateVariables;
-      console.log('📤 Using WhatsApp template:', templateName);
-    } else {
-      // Fallback to free-form message (may not work for business accounts)
-      const message = createArabicMessage(data);
-      requestBody.message = message;
-      console.log('⚠️ No template configured, using free-form message (may not work for business accounts)');
-    }
-
     console.log('📤 Bavatel WhatsApp API request:', {
-      api_account_id: accountId,
-      inbox_id: inboxId,
-      to: formattedPhone,
-      template_name: templateName || 'N/A (free-form)',
-      api_url: apiUrl,
+      endpoint: `${apiUrl}/developer/api/v1/messages`,
+      inbox_id: requestBody.inbox_id,
+      phone_number: formattedPhone,
+      template_name: templateName,
+      template_language: 'ar',
+      template_variables: templateVariables,
     });
 
     // Send request to Bavatel API
-    // Try template endpoint first, fallback to send_message
-    const endpoint = templateName 
-      ? `${apiUrl}/api/send_template_message` 
-      : `${apiUrl}/api/send_message`;
+    // According to their docs: https://chat.bevatel.com/developer/api/v1/messages
+    const endpoint = `${apiUrl}/developer/api/v1/messages`;
     
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        'api_account_id': accountId,
+        'api_access_token': accessToken,
       },
       body: JSON.stringify(requestBody),
     });
 
     // Parse response
-    const responseData: BavatelResponse = await response.json();
+    let responseData: BavatelResponse;
+    const responseText = await response.text();
+    
+    try {
+      responseData = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('❌ Failed to parse Bavatel API response as JSON:', responseText);
+      responseData = { success: false, error: 'Invalid JSON response', message: responseText };
+    }
 
     console.log('📥 Bavatel API Response:', {
       status: response.status,
       statusText: response.statusText,
       data: responseData,
+      rawResponse: responseText.substring(0, 500), // First 500 chars for debugging
     });
 
     if (!response.ok) {

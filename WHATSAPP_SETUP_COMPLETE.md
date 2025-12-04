@@ -14,7 +14,7 @@ BAVATEL_API_ACCESS_TOKEN=63CXCSaixNAvYrawZb9QUVWD
 BAVATEL_API_URL=https://business-chat.bevatel.com
 BAVATEL_INBOX_ID=61770
 BAVATEL_PHONE_NUMBER=+966920032081
-BAVATEL_TEMPLATE_NAME=wse_login_credentials  # Set this after template creation
+BAVATEL_TEMPLATE_NAME=wse_account_activation  # Set this after template creation
 ```
 
 ### 2. Code Implementation ✅
@@ -38,7 +38,7 @@ Ready to test: `npm run test:whatsapp +966YOUR_PHONE`
 2. Navigate to **WhatsApp Manager** → **Message Templates**
 3. Click **"+ Create template"**
 4. Fill in:
-   - **Name:** `wse_login_credentials`
+   - **Name:** `wse_account_activation`
    - **Category:** Authentication (fastest approval - 15 minutes)
    - **Language:** Arabic (العربية)
 5. **Body Template:**
@@ -72,7 +72,7 @@ After template is approved:
 1. Copy the exact template name from Meta Business Manager
 2. Update `.env.local`:
    ```bash
-   BAVATEL_TEMPLATE_NAME=wse_login_credentials
+   BAVATEL_TEMPLATE_NAME=wse_account_activation
    ```
    *(Use the exact name from Meta - it's case-sensitive)*
 
@@ -164,7 +164,7 @@ npm run dev
 | API URL | business-chat.bevatel.com | ✅ Configured |
 | Inbox ID | 61770 | ✅ Configured |
 | Phone Number | +966920032081 | ✅ Configured |
-| Template Name | wse_login_credentials | ⚠️ **Need to create** |
+| Template Name | wse_account_activation | ⚠️ **Need to create** |
 
 ## ⚡ Next Action Required
 

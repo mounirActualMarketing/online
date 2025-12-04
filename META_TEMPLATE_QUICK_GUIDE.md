@@ -11,7 +11,7 @@ Based on the Meta Business Manager interface you showed me, here's exactly what 
 ### Step 2: Fill in Template Details
 
 #### Template Name
-- Enter: `wse_login_credentials`
+- Enter: `wse_account_activation`
 - This will be used in your code
 
 #### Category Selection
@@ -91,7 +91,7 @@ Check the **"Template Preview"** sidebar on the right:
 Once approved, update `.env.local`:
 
 ```bash
-BAVATEL_TEMPLATE_NAME=wse_login_credentials
+BAVATEL_TEMPLATE_NAME=wse_account_activation
 ```
 
 ## Variable Order Reference
